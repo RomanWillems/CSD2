@@ -1,30 +1,21 @@
-# for x in range(5, 10):
-#    print(x)
+#VRAGEN HOE JE LIJST EEN VOOR EEN OPTELT
 
-# days=["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
-# for d in days:
-#    print (d)
- 
-# for x in range(5,10):
-#     if (x==7): break
-#     if (x % 2 == 0): continue
-#     print (x)
 
-# days=["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
-# for i,d in enumerate(days):
-#     print (i, d)
+print('how many times do you want to play the sample?')
+playCount = int(input (""))
 
-# fruits = ["apple", "banana", "cherry"]
-# for x in fruits:
-#   if x == "banana":
-#     break
-#   print(x)
+print('Select the note times, 1 = 1, 1/2 = 0.5, 1/4 = 0.25')
+noteTimes = []
+for i in range(playCount):
+    noteTimes.append(float(input("")))
+print("note times =", noteTimes)
 
-import asyncio
-
-async def seq():
-    print("one")
-    await asyncio.sleep(1)
-    print("two")
-
-asyncio.run(seq())
+timestamps16 = []
+for i in noteTimes:
+    if i == 0.25:
+        timestamps16.append(1)
+    if i == 0.50:
+        timestamps16.append(2)
+    if i == 1:
+        timestamps16.append(4)
+print("timestamps in 16th", timestamps16)

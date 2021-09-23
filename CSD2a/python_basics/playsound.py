@@ -1,6 +1,6 @@
-# import simpleaudio.functionchecks as fc
+# import simpleaudio as sa
 
-#  fc.LeftRightCheck.run()
+# fc.LeftRightCheck.run()
 
 # import simpleaudio as sa
 
@@ -13,12 +13,12 @@
 #     play_obj = wave_obj.play()
 #     play_obj.wait_done()
 
+import simpleaudio as sa
+from simpleaudio.shiny import WaveObject
 
 Howmuch = ["1","2","3","4","5"]
 for x in Howmuch:
-   play_obj = wave_obj.play()
-
-import simpleaudio as sa
+   play_obj = WaveObject.play()
 
 filename = 'fieuw.wav'
 wave_obj = sa.WaveObject.from_wave_file(filename)

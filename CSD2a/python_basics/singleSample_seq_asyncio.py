@@ -2,31 +2,47 @@ import simpleaudio as sa
 import asyncio
 
 #load a sample
-filename = 'Kick.wav'
-wave_obj = sa.WaveObject.from_wave_file(filename)
- 
-#Ask the play times
+
+print("choose your sample!")
+print("kick type: 1")
+print("flute type: 2")
+sampleChoise = input("")
+if sampleChoise == "1":
+    filename = 'Kick.wav'
+if sampleChoise == "2":
+    filename = 'fieuw.wav'
+
+#get the playtimes
 print('how many times do you want to play the sample?')
 playCount = int(input (""))
 
-#get Bpm and redefine it to ms
-print('What bpm do you want?')
-bpmInput = int(input (""))
-quarternote_dur = 60 / bpmInput #in ms
+#define a quarternote in ms according to the bpm
+print('the default bpm is 120, do you want to change it? type: yes or no')
+wichBpm = input("")
+if wichBpm == "yes":
+    print("type your favorite bpm!")
+    bpmInput = int(input (""))
+    quarternote_dur = 60 / bpmInput
+if wichBpm == "no":
+    bpmInput = 120
+    quarternote_dur = 60 / bpmInput
+print("bpm=", bpmInput)
+
 
 #add the note times given in a array in a certain order
 print('Select the note times, 1 = 1, 1/2 = 0.5, 1/4 = 0.25')
-
 noteTimes = []
 for i in range(playCount):
     noteTimes.append(float(input("")))
-
 print("note times =", noteTimes)
+
+#get sample
+sample = sa.WaveObject.from_wave_file(filename)
 
 #sequence the loop in asked playtimes and notetimes and play the sample
 async def seq():
     for noteTime in noteTimes :
-        play_obj = wave_obj.play()
+        play_obj = sample.play()
         
         if noteTime == 1: 
             await asyncio.sleep(quarternote_dur)
