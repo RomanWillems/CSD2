@@ -1,4 +1,4 @@
-#VRAGEN HOE JE LIJST EEN VOOR EEN OPTELT
+#VRAGEN HOE JE LIJST EEN VOOR EEN OPTELT.
 
 
 print('how many times do you want to play the sample?')
