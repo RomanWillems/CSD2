@@ -1,7 +1,7 @@
 import simpleaudio as sa
 import asyncio
 
-#load a sample
+#load a sample.
 
 print("choose your sample!")
 print("kick type: 1")
