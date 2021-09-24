@@ -48,25 +48,55 @@ for i in noteTimes:
         latestVal += 4
 print("timestamps in 16th=", timestamps16)
 
-#sequence the loop and play the samples
-noteLength = []
-for i in noteTimes:
-    noteLength.append(bpm_ms * i)
+timeStamps = []
+time16thNote = bpm_ms / 4
 
-#get sample
-sampleKick = sa.WaveObject.from_wave_file(filename)
+for i in timestamps16:
+    timeStamps.append(i * time16thNote)
+print("timesStamps=", timeStamps)
 
-#calculate current
+
+ #get sample
+sample = sa.WaveObject.from_wave_file(filename)
 time_zero = time.time()
-time_sum = 0
 
-# while i < (1 + playCount):
-for time_dur in noteLength:
-    time_cur = time.time() - time_zero
-    time_dev = time_cur - time_sum
-    sampleKick.play()
-    time.sleep(time_dur)
-    time_sum = time_sum + time_dur
-print("time_sum=", time_sum)
+if timeStamps:
+    ts = timeStamps.pop(0)
+
+while True:
+    now = time.time() - time_zero
+    for i in timeStamps:
+        if (now >= ts):
+             sample.play()
+             if timeStamps:
+                 ts = timeStamps.pop(0)
+
+    time.sleep(0.001)
+    
+time.sleep(time16thNote[-1])
+
+
+
+
+
+
+
+
+
+
+#sequence the loop and play the samples
+# noteLength = []
+# for i in noteTimes:
+#     noteLength.append(bpm_ms * i)
+# print("notelengte=", noteLength)
+
+
+# #calculate current
+
+# time_sum = 0
+
+# # while i < (1 + playCount):
+
+
 
     
