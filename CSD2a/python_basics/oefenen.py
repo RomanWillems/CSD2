@@ -11,11 +11,13 @@ for i in range(playCount):
 print("note times =", noteTimes)
 
 timestamps16 = []
+latestVal = 0
 for i in noteTimes:
+    timestamps16.append(latestVal)
     if i == 0.25:
-        timestamps16.append(1)
-    if i == 0.50:
-        timestamps16.append(2)
-    if i == 1:
-        timestamps16.append(4)
+        latestVal += 1
+    elif i == 0.50:
+        latestVal += 2
+    elif i == 1:
+        latestVal += 4
 print("timestamps in 16th", timestamps16)
