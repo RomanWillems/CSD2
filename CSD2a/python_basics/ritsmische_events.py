@@ -1,5 +1,7 @@
 import time 
 import simpleaudio as sa
+import random
+
 
 #define a quarternote in ms according to the bpm
 print('the default bpm is 120, do you want to change it? type: yes or no')
@@ -13,86 +15,59 @@ if wichBpm == "no":
     bpm_ms = 60 / bpmInput
 print("bpm=", bpmInput)
 
-eightNote = bpm_ms / 4
-quarterNote = bpm_ms / 2
-halfNote = bpm_ms 
-
+bpm = bpm_ms / 2
 
 Kick = sa.WaveObject.from_wave_file("kit/kick.wav")
 Snare = sa.WaveObject.from_wave_file("kit/snare.wav")
-HiHat = sa.WaveObject.from_wave_file("kit/hihat.wav")
+HiHat = sa.WaveObject.from_wave_file("kit/hihat.wav")   
+
+#maak het event aan om timestamps en instrument te definieren
+def event_instrument(instrument,stamps):
+    return{
+        "instrument": instrument,
+        "timestamps": stamps
+        }
 
 #Place in grid
+placeKick = [1,3,5,7]
+placeSnare = [3,7]
+placeHiHat = [2,4,6,8]
 
-placeKick = [0,2,4,6]
-placeSnare = [2,6]
-placeHiHat = [1,3,5,7]
-
-#convert the place from the kick to timestamps in ms
-timeStampsKick = []
+#convert the gridplace to timestamps in ms and collect them all together
+timeStamps = []
 for i in placeKick:
-    timeStampsKick.append(i * quarterNote)
-print("timesStamps Kick=", timeStampsKick)
-
-#convert the place from the snare to timestamps in ms
-timeStampsSnare = []
+    timeStamps.append(event_instrument('kick',i * bpm))
 for i in placeSnare:
-    timeStampsSnare.append(i * quarterNote)
-print("timesStamps Snare=", timeStampsSnare)
-
-#convert the place from the hihat to timestamps in ms
-timeStampsHiHat = []
+    timeStamps.append(event_instrument('snare',i * bpm))
 for i in placeHiHat:
-    timeStampsHiHat.append(i * quarterNote)
-print("timesStamps HiHat=", timeStampsHiHat)
+    timeStamps.append(event_instrument('hihat',i * bpm))
 
+#copy the timeStamps to make it loop
+copyStamps = timeStamps.copy()
 
-#Make an event for gathering info about the Kick
-kick_event = {
-    "timeStamps": timeStampsKick,
-    "Place": placeKick,
-    "instrumentName": "Kick",
-    "instrument": Kick
-}
-snare_event = {
-    "timeStamps": timeStampsSnare,
-    "place": placeSnare,
-    "instrumentName": "Snare",
-    "instrument": Snare
-}
-hihat_event = {
-    "timeStamps": timeStampsHiHat,
-    "place": placeHiHat,
-    "instrumentName": "Hihat",
-    "instrument": HiHat
-}
 #get starting point
 time_zero = time.time()
 
-def handle_event(event):
-    if event['timeStamps']:
-        ts = event['timeStamps'].pop(0)
-    
-    while True:
-        now = time.time() - time_zero
-        if (now >= ts):
-            print(event['instrumentName'])
-            event['instrument'].play()
-            #Get the next length en store it in ts again
-            if event['timeStamps']:
-                ts = event['timeStamps'].pop(0)
-            else:
-                break
-        time.sleep(0.001)
-    time.sleep(1)
+#start the loop
+while True:
+    now = time.time() - time_zero
+    for i in timeStamps:
+        #if the time matches a timeStamps, play the sample attached to it (kick,snare or hihat)
+        if (now >= i["timestamps"]):
+            if (i["instrument"]) == 'kick':
+                Kick.play()
+            if (i['instrument']) == 'snare':
+                Snare.play()
+            if (i['instrument']) == 'hihat':
+                HiHat.play()
 
-handle_event(kick_event)
-handle_event(snare_event)
-handle_event(hihat_event)
+            #Remove the timestamps when it played.
+            timeStamps.remove(i)
 
-
-
-
-
-
-
+            #if the timeStamps are empty, fill it with a copy of the loop so it keeps looping.
+            if timeStamps == []:
+                time_zero = time.time()
+                now = time.time() - time_zero
+                timeStamps = copyStamps
+                copyStamps = timeStamps.copy()
+        
