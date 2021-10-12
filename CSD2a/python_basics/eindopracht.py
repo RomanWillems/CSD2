@@ -103,7 +103,7 @@ time_zero = time.time()
 while True:
     now = time.time() - time_zero
     for i in timeStamps:
-        #if the time matches a timeStamps, play the sample attached to it (kick,snare or hihat)
+        #if the time matches a timeStamps, play the sample attached to it (kick,snare or hihat).
         if (now >= i["timestamps"]):
             if i["instrument"] == 'Kick':
                 Kick.play()
