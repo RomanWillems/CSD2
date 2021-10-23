@@ -1,6 +1,7 @@
 import time 
 import simpleaudio as sa
 import random
+from midiutil import MIDIFile
 
 #----------------------------------------------------------------------------------------------#
 #define a quarternote in ms according to the bpm
@@ -18,8 +19,10 @@ print("bpm=", bpmInput)
 bpm_time = bpm_ms / 2
 
 #----------------------------------------------------------------------------------------------#
+#let the user choose the sample for every level, high, mid and low.
 Kick = sa.WaveObject.from_wave_file("kit/kick.wav")
 
+#ask for clap or snare
 print('choose youre samples!')
 print('(0) = snare')
 print('(1) = clap')
@@ -29,6 +32,7 @@ if snare_clap == "0":
 if snare_clap == "1":
     Snare = sa.WaveObject.from_wave_file("kit/clap.wav")
 
+#ask for closed or open hihat
 print('(0) = closed hihat')
 print('(1) = open hihat')
 hihat_open_closed = input("")
@@ -37,6 +41,7 @@ if hihat_open_closed == "0":
 if hihat_open_closed == "1":
     HiHat = sa.WaveObject.from_wave_file("kit/hihat_open.wav")
 
+#ask for high or low djembe
 print('(0) = high djembe')
 print('(1) = low djembe')
 djembe_high_low = input("")
@@ -138,10 +143,10 @@ copyStamps = timeStamps.copy()
 
 
 #----------------------------------------------------------------------------------------------#
-
- #get starting point
+#get starting point
 time_zero = time.time()
 
+#make a while loop to start the time sequence
 while True:
     #make a counter to detect later on how many times you played the loop
     counter = 0
@@ -191,15 +196,5 @@ while True:
                             timeStamps = copyStamps
                             copyStamps = timeStamps.copy()
 
-
-
-
-
-
-    #ask if the users wants to play again, if awnser is something other then yes, stop the sequence                
-    
-    # playagain = input("would you like to play it again?")
-    # if (playagain != 'yes'):
-    #     break
-
+                            
 
