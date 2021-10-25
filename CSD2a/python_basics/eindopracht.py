@@ -3,6 +3,13 @@ import simpleaudio as sa
 import random
 from midiutil import MIDIFile
 
+#alot is learnt from my classes at HKU
+#site: https://csd.hku.nl/csd2/now/csd2a/
+#also the github from Ciska: https://github.com/ciskavriezenga/CSD_21-22
+
+#simple audio: https://simpleaudio.readthedocs.io/en/latest/
+#midiutil: https://pypi.org/project/MIDIUtil/
+
 #----------------------------------------------------------------------------------------------#
 #define a quarternote in ms according to the bpm
 print('the default bpm is 120, do you want to change it? type: yes or no')
@@ -24,6 +31,7 @@ Kick = sa.WaveObject.from_wave_file("kit/kick.wav")
 
 #ask for clap or snare
 print('choose youre samples!')
+print('the kick is default')
 print('(0) = snare')
 print('(1) = clap')
 snare_clap = input("")
@@ -52,7 +60,7 @@ if djembe_high_low == "1":
 
 
 #----------------------------------------------------------------------------------------------#
-#make the event to define the timestamps
+#make the event to define the timestamps, and add the midi values to read it out later on.
 def event_instrument(instrument,stamps,stamps_midi,sample,velocity,midi_note,midi_dur):
     return{
         "instrument": instrument,
@@ -65,7 +73,7 @@ def event_instrument(instrument,stamps,stamps_midi,sample,velocity,midi_note,mid
 
         }  
 
-#make the event to define the place of the kick
+#make the event to define the place of the kick, and the place of the midi.
 def event_stamps(time_sig,place,place_midi):
     return{
         "time_sig": time_sig,
@@ -87,28 +95,29 @@ choosen_time_signature = input("")
 if choosen_time_signature == "4":
     #make a list of probabilitys per instrument
     #8 numbers is 4/4
-    probability_kick = [100,25,50,10,100,0,50,0]
-    probability_snare = [5,25,20,20,100,15,10,10]
-    probability_hihat = [10,70,100,60,65,80,100,100]
-    probability_djembe = [10,50,40,50,25,35,40,10]
+    #probabilitys are produced by Recaman sequence, starting at a point in the sequence.
+    probability_kick = [85,31,86,30,87,29,88,28]
+    probability_snare = [41,18,42,17,43,16,44,15]
+    probability_hihat = [16,44,15,45,14,46,79,113]
+    probability_djembe = [43,62,42,63,41,18,42,17]
 if choosen_time_signature == "3":
     #6 numbers is 3/4
-    probability_kick = [100,10,100,10,100,10]
-    probability_snare = [0,25,80,20,30,10]
-    probability_hihat = [15,85,90,85,75,100]
-    probability_djembe = [10,25,35,40,25,20]
+    probability_kick = [86,30,87,29,88,28]
+    probability_snare = [42,17,43,16,44,15]
+    probability_hihat = [15,45,14,46,79,113]
+    probability_djembe = [42,63,41,18,42,17]
 if choosen_time_signature == "5":
     #10 numbers is 5/4
-    probability_kick = [100,25,50,50,25,100,25,50,50,25]
-    probability_snare = [0,25,50,50,20,85,25,50,35,20]
-    probability_hihat = [15,70,85,80,55,65,85,55,70,100]
-    probability_djembe = [15,20,35,40,25,30,25,30,25,40]
+    probability_kick = [84,32,85,31,86,30,87,29,88,28]
+    probability_snare = [42,63,41,18,42,17,43,16,44,15]
+    probability_hihat = [17,43,16,44,15,45,14,46,79,113]
+    probability_djembe = [8,25,43,62,42,63,41,18,42,17]
 if choosen_time_signature == "7":
     #10 numbers is 5/4
-    probability_kick = [100,25,35,20,25,100,25,100,25,30,20,25,100,25]
-    probability_snare = [0,25,50,50,20,85,25,0,25,50,50,20,85,25]
-    probability_hihat = [15,70,85,80,55,65,85,15,70,85,80,55,65,100]
-    probability_djembe = [15,20,35,40,25,30,25,15,20,35,40,25,30,25]    
+    probability_kick = [81,35,82,34,83,33,84,32,85,31,86,30,87,29]
+    probability_snare = [24,8,25,43,62,42,63,41,18,42,17,43,16,44]
+    probability_hihat = [63,41,18,42,17,43,16,44,15,45,14,46,79,113]
+    probability_djembe = [22,10,23,9,24,8,25,43,62,42,63,41,18,42]   
 
 #----------------------------------------------------------------------------------------------#
 #make a list of stamps for each individual instrument
@@ -133,13 +142,11 @@ def random_place():
         if (rand3 <= item):
             stamps.append(event_stamps("stamp_djembe",index +1,index))
 
-            
-
-
 #----------------------------------------------------------------------------------------------#
 #convert the individual stamps to timestamps in ms and collect them all together
 #the time stamp added is accoring to the stamp. it is converted by the bpm_time
 #in de list is every info for the midi aswell like velocity,place,duration
+#inspired and learnt by JORIS TAKKEN from my class.
 timeStamps = []
 def all_stamps():
     random_place()
@@ -163,14 +170,13 @@ copyStamps = timeStamps.copy()
 #----------------------------------------------------------------------------------------------#
 # make a function to make an midi file.
 # https://pypi.org/project/MIDIUtil/
+# https://github.com/ciskavriezenga/CSD_21-22/tree/master/csd2a/theorie/6_writeMIDI
 def midi():
     print("midi")
 
     track = 0 
     timeMidi = 0
     channel = 0
-
-
     midi_file = MIDIFile(1) # One track, defaults to format 1 (tempo track
                         # automatically created)
     midi_file.addTempo(track, timeMidi, bpmInput)
@@ -185,10 +191,11 @@ def midi():
 #get starting point
 time_zero = time.time()
 
+
 #make a while loop to start the time sequence
 play = True
 while play:
-    #make a counter to detect later on how many times you played the loop
+    #make a counter to detect later on how many times you played the loop, start the counter at 0
     counter = 0
     #start the loop
     while counter < 4:
