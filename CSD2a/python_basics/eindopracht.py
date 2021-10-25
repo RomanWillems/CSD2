@@ -1,3 +1,6 @@
+#THE RECAMAN DRUM GENERATOR
+
+
 import time 
 import simpleaudio as sa
 import random
