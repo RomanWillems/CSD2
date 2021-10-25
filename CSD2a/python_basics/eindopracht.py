@@ -80,6 +80,7 @@ print("choose time signature")
 print('(4) = 4/4')
 print('(3) = 3/4')
 print('(5) = 5/4')
+print('(7) = 7/4')
 
 #convert the choosen time signature to possible places on the grid
 choosen_time_signature = input("")
@@ -102,6 +103,12 @@ if choosen_time_signature == "5":
     probability_snare = [0,25,50,50,20,85,25,50,35,20]
     probability_hihat = [15,70,85,80,55,65,85,55,70,100]
     probability_djembe = [15,20,35,40,25,30,25,30,25,40]
+if choosen_time_signature == "7":
+    #10 numbers is 5/4
+    probability_kick = [100,25,35,20,25,100,25,100,25,30,20,25,100,25]
+    probability_snare = [0,25,50,50,20,85,25,0,25,50,50,20,85,25]
+    probability_hihat = [15,70,85,80,55,65,85,15,70,85,80,55,65,100]
+    probability_djembe = [15,20,35,40,25,30,25,15,20,35,40,25,30,25]    
 
 #----------------------------------------------------------------------------------------------#
 #make a list of stamps for each individual instrument
