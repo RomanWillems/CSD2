@@ -1,143 +1,240 @@
-
-
-
-
-
-# in deze is het totaal random wanneer de samples worden gespeeld.
-
-
-
-
-
-
-
+import time 
 import simpleaudio as sa
-import time
 import random
+from midiutil import MIDIFile
 
-hat = sa.WaveObject.from_wave_file("samples_drumstel/hat.wav") 
-snare = sa.WaveObject.from_wave_file("samples_drumstel/snare.wav")
-kick = sa.WaveObject.from_wave_file("samples_drumstel/kick.wav")
-bongo1 = sa.WaveObject.from_wave_file("samples_drumstel/bongo1.wav")
-bongo2 = sa.WaveObject.from_wave_file("samples_drumstel/bongo2.wav")
+#----------------------------------------------------------------------------------------------#
+#define a quarternote in ms according to the bpm
+print('the default bpm is 120, do you want to change it? type: yes or no')
+wichBpm = input("")
+if wichBpm == "yes":
+    print("type your favorite bpm!")
+    bpmInput = int(input(""))
+    bpm_ms = 60 / bpmInput
+if wichBpm == "no":
+    bpmInput = 120
+    bpm_ms = 60 / bpmInput
+print("bpm=", bpmInput)
 
-BPMinput = 120
-BPMHeel = (60.0 / BPMinput) * 2  #= 1 hele noot  
-BPMTwee = BPMHeel / 2            #= 1/2 noot  
-BPMDrie = BPMHeel / 3            #= 1/3 noot  
-BPMVijf = BPMHeel / 5            #= 1/5 noot
-BPMAcht = BPMHeel / 8            #= 1/8 noot
+bpm_time = bpm_ms / 2
 
-def event_instrument(instrument,stamps):
+#----------------------------------------------------------------------------------------------#
+#let the user choose the sample for every level, high, mid and low.
+Kick = sa.WaveObject.from_wave_file("kit/kick.wav")
+
+#ask for clap or snare
+print('choose youre samples!')
+print('(0) = snare')
+print('(1) = clap')
+snare_clap = input("")
+if snare_clap == "0":
+    Snare = sa.WaveObject.from_wave_file("kit/snare.wav")
+if snare_clap == "1":
+    Snare = sa.WaveObject.from_wave_file("kit/clap.wav")
+
+#ask for closed or open hihat
+print('(0) = closed hihat')
+print('(1) = open hihat')
+hihat_open_closed = input("")
+if hihat_open_closed == "0":
+    HiHat = sa.WaveObject.from_wave_file("kit/hihat_closed.wav")
+if hihat_open_closed == "1":
+    HiHat = sa.WaveObject.from_wave_file("kit/hihat_open.wav")
+
+#ask for high or low djembe
+print('(0) = high djembe')
+print('(1) = low djembe')
+djembe_high_low = input("")
+if djembe_high_low == "0":
+    Djembe = sa.WaveObject.from_wave_file("kit/djembe_high.wav")
+if djembe_high_low == "1":
+    Djembe = sa.WaveObject.from_wave_file("kit/djembe_low.wav")
+
+
+#----------------------------------------------------------------------------------------------#
+#make the event to define the timestamps
+def event_instrument(instrument,stamps,sample,velocity,midi_note,midi_dur):
     return{
-        "instrument" : instrument,
-        "timestamps" : stamps    
+        "instrument": instrument,
+        "stamps": stamps,
+        "sample": sample,
+        "velocity": velocity,
+        "midi_note": midi_note,
+        "midi_dur": midi_dur
+
+        }  
+
+#make the event to define the place of the kick
+def event_stamps(time_sig,place):
+    return{
+        "time_sig": time_sig,
+        "place": place,
     }
 
-def event_stamps(welkBlok,plek):
-    return{
-        "welkBlok" : welkBlok,
-        "plek" : plek,   
-    }
+#----------------------------------------------------------------------------------------------#
+#get the wished time signatures
+print("choose time signature")
+print('(4) = 4/4')
+print('(3) = 3/4')
+print('(5) = 5/4')
 
-# arrays voor welke plekken er beschikbaar zijn in de groepen
-plekTweetje = [1,2]
-plekDrietje = [1,2,3]
-plekVijftje = [1,2,3,4,5]
-plekAchtje = [1,2,3,4,5,6,7,8]
+#convert the choosen time signature to possible places on the grid
+choosen_time_signature = input("")
+if choosen_time_signature == "4":
+    #make a list of probabilitys per instrument
+    #8 numbers is 4/4
+    probability_kick = [100,25,50,10,100,0,50,0]
+    probability_snare = [5,25,20,20,100,15,10,10]
+    probability_hihat = [10,70,100,60,65,80,100,100]
+    probability_djembe = [10,50,40,50,25,35,40,10]
+if choosen_time_signature == "3":
+    #6 numbers is 3/4
+    probability_kick = [100,10,100,10,100,10]
+    probability_snare = [0,25,80,20,30,10]
+    probability_hihat = [15,85,90,85,75,100]
+    probability_djembe = [10,25,35,40,25,20]
+if choosen_time_signature == "5":
+    #10 numbers is 5/4
+    probability_kick = [100,25,50,50,25,100,25,50,50,25]
+    probability_snare = [0,25,50,50,20,85,25,50,35,20]
+    probability_hihat = [15,70,85,80,55,65,85,55,70,100]
+    probability_djembe = [15,20,35,40,25,30,25,30,25,40]
 
-# arrays voor de timestamps van de groepen 
-stempels = []
-
-
-
-def randomD():
-    for i in plekTweetje:
+#----------------------------------------------------------------------------------------------#
+#make a list of stamps for each individual instrument
+#stamp is randomly generated accoriding to the probability in the probability lists
+#if the random generated number is lower then the probability a stamp is added in the list, stamps.
+stamps = []
+def random_place():
+    for index, item in enumerate(probability_kick):
         rand = random.randint(1,100)
-        # dus hij zal vaker op de 1 een beat geven dan op de 2
-        if (rand <= 50):
-            stempels.append(event_stamps("twee",i))
-
-    for i in plekDrietje:
+        if (rand <= item):
+            stamps.append(event_stamps("stamp_kick",index + 1 ))
+    for index, item in enumerate(probability_snare):
         rand1 = random.randint(1,100)
-        # dus hij zal vaker op de 1 een beat geven dan op de 2
-        if (rand1 <= 50):
-            stempels.append(event_stamps("drie",i))
-        
-    for i in plekVijftje:
+        if (rand1 <= item):
+            stamps.append(event_stamps("stamp_snare",index + 1 ))
+    for index, item in enumerate(probability_hihat):
         rand2 = random.randint(1,100)
-        # dus hij zal vaker op de 1 een beat geven dan op de 2
-        if (rand2 <= 80):
-            stempels.append(event_stamps("vijf",i))
-
-    for i in plekAchtje:
+        if (rand2 <= item):
+            stamps.append(event_stamps("stamp_hihat",index + 1 ))
+    for index, item in enumerate(probability_djembe):
         rand3 = random.randint(1,100)
-        # dus hij zal vaker op de 1 een beat geven dan op de 2
-        if (rand3 <= 80):
-            stempels.append(event_stamps("acht",i))
+        if (rand3 <= item):
+            stamps.append(event_stamps("stamp_djembe",index + 1 ))
+            
 
-# de timestamps van alle instrumenten / lengtesworden in 1 lijst gestopt samen met de instrument Naam
-alleStamps = []
 
-# hierin worden de plekken van de timestamps geconverteerd naar MS
-def bijElkaar():
-    randomD()
-    samples = ['kick','snare','hat','bongo1','bongo2']
-    for i in stempels:
-        rand4 = random.randint(1,100)
-        if i['welkBlok'] == "twee":
-            alleStamps.append(event_instrument(samples[0],i['plek']*BPMTwee))
-        if i['welkBlok'] == "drie":
-            alleStamps.append(event_instrument(samples[1],i['plek']*BPMDrie))
-        if i['welkBlok'] == "vijf":
-            alleStamps.append(event_instrument(samples[2],i['plek']*BPMVijf))
-        
-        if i['welkBlok'] == "acht":
-            if (rand4 <= 50):
-                alleStamps.append(event_instrument(samples[3],i['plek']*BPMAcht))
-            else:
-                alleStamps.append(event_instrument(samples[4],i['plek']*BPMAcht))
+#----------------------------------------------------------------------------------------------#
+#convert the individual stamps to timestamps in ms and collect them all together
+#the time stamp added is accoring to the stamp. it is converted by the bpm_time
+timeStamps = []
+def all_stamps():
+    random_place()
+    samples = ['Kick','Snare','HiHat','Djembe']
+    for i in stamps:
+        if i["time_sig"] == "stamp_kick":
+            timeStamps.append(event_instrument(samples[0],i["place"] * bpm_time, Kick, 120, 60, 0.001))
+        if i["time_sig"] == "stamp_snare":
+            timeStamps.append(event_instrument(samples[1],i["place"] * bpm_time, Snare, 120, 61, 0.001))
+        if i["time_sig"] == "stamp_hihat":
+            timeStamps.append(event_instrument(samples[2],i["place"] * bpm_time, HiHat, 120, 62, 0.001))
+        if i["time_sig"] == "stamp_djembe":
+            timeStamps.append(event_instrument(samples[3],i["place"] * bpm_time, Djembe,120, 63, 0.001))
+    stamps.clear()
+#functie aanroepen
+all_stamps()
+#copy the timeStamps to make it loop
+copyStamps = timeStamps.copy()
 
-    # als ie alle timestamps heeft gemaakt mag de lijst gecleard worden voor een nieuwe reeks
-    stempels.clear()
 
-# roep voor de eerste keer de functie aan
-bijElkaar()
+#----------------------------------------------------------------------------------------------#
+# make a function to make an midi file.
+# https://pypi.org/project/MIDIUtil/
+def midi():
+    print("midi")
 
-# maak een 0 tijd 
-tijdBegin = time.time()
+    track = 0 
+    timeMidi = 0
+    channel = 0
 
-while True:
-    # nu is de tijd die begint bij 0 oplopend
-    nu = time.time() - tijdBegin
-    for i in alleStamps:
-        # als het geluid van de kick matcht met de timestamp op dat moment speelt er een kick en zo voort
-        if (nu >= i['timestamps']): 
-            print("-=-")
-            if i["instrument"] == 'kick':
-                kick.play()
-            if i["instrument"] == 'snare':
-                snare.play()
-            if i["instrument"] == 'hat':
-                hat.play()
 
-            if i["instrument"] == 'bongo1':
-                bongo1.play()
-            if i["instrument"] == 'bongo2':
-                bongo2.play()
+    midi_file = MIDIFile(1) # One track, defaults to format 1 (tempo track
+                        # automatically created)
+    midi_file.addTempo(track, timeMidi, bpmInput)
+
+    for midi in copyStamps:   
+        midi_file.addNote(track, channel, midi['midi_note'], (midi["stamps"] * 2 ) , 0.1 , 100)
+
+    with open("MidiFile.mid", "wb") as output_file:      
+        midi_file.writeFile(output_file)
+
+#----------------------------------------------------------------------------------------------#
+#get starting point
+time_zero = time.time()
+
+#make a while loop to start the time sequence
+play = True
+while play:
+    #make a counter to detect later on how many times you played the loop
+    counter = 0
+    #start the loop
+    while counter < 4:
+        now = time.time() - time_zero
+        for i in timeStamps:
+            #if the time matches a timeStamps, play the sample attached to it (kick,snare or hihat).
+            if (now >= i["stamps"]):
+                i["sample"].play()
                 
-            # elke keer als er een geluid is gespeeld moet er 1 geluid weg
-            alleStamps.remove(i)
 
-            # elke keer als de lijst leeg is zal er een nieuwe begin tijd komen
-            # de lijst zal ook elke keer weer gevult worden
-            if alleStamps == []:
-                print("-=-=-=-=-=-=-=-=-=-=-=-=-")
-                tijdBegin = time.time()
-                nu = time.time() - tijdBegin
-                bijElkaar()
+                #Remove the timestamps when it played.
+                timeStamps.remove(i)
+
+                #if the timeStamps are empty, fill it with a copy of the loop so it keeps looping.
+                if timeStamps == []:
+                    #count up the counter to check in the while loop when it need to be stopped
+                    counter = counter + 1
+                    print('loop', counter)
+                    if counter < 4:
+                        time_zero = time.time()
+                        now = time.time() - time_zero
+                        timeStamps = copyStamps
+                        copyStamps = timeStamps.copy()
                 
-                
-                
-                
-                
+                    else:
+                        print("would you like to play the sample")
+                        print("(0) play again")
+                        print("(1) print Midi")
+                        print("(2) new loop")
+                        print("(3) stop")
+                        again = input("")
+                        
+                        #fill the list with the old sequence
+                        if again == "0":
+                            time_zero = time.time()
+                            now = time.time() - time_zero
+                            timeStamps = copyStamps
+                            copyStamps = timeStamps.copy()
+                        
+                        #make the midi file by rehancing to the midi function
+                        if again == "1":
+                            midi()
+                            play = False
+
+                        #fill the list with new samples
+                        if again == "2":
+                            timeStamps.clear()
+                            copyStamps.clear()
+                            all_stamps()
+                            copyStamps = timeStamps.copy()
+                            time_zero = time.time()
+                            now = time.time() - time_zero
+                            timeStamps = copyStamps
+                            copyStamps = timeStamps.copy()
+                        
+                        #stop the sequence
+                        if again == "3":
+                            play = False
+
+                            
+

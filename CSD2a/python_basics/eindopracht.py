@@ -53,18 +53,25 @@ if djembe_high_low == "1":
 
 #----------------------------------------------------------------------------------------------#
 #make the event to define the timestamps
-def event_instrument(instrument,stamps,sample):
+def event_instrument(instrument,stamps,stamps_midi,sample,velocity,midi_note,midi_dur):
     return{
         "instrument": instrument,
-        "timestamps": stamps,
-        "sample": sample
+        "stamps": stamps,
+        "stamps_midi": stamps_midi,
+        "sample": sample,
+        "velocity": velocity,
+        "midi_note": midi_note,
+        "midi_dur": midi_dur
+
         }  
 
 #make the event to define the place of the kick
-def event_stamps(time_sig,place):
+def event_stamps(time_sig,place,place_midi):
     return{
         "time_sig": time_sig,
         "place": place,
+        "place_midi": place_midi
+        
     }
 
 #----------------------------------------------------------------------------------------------#
@@ -105,36 +112,40 @@ def random_place():
     for index, item in enumerate(probability_kick):
         rand = random.randint(1,100)
         if (rand <= item):
-            stamps.append(event_stamps("stamp_kick",index + 1))
+            stamps.append(event_stamps("stamp_kick",index +1,index))
     for index, item in enumerate(probability_snare):
         rand1 = random.randint(1,100)
         if (rand1 <= item):
-            stamps.append(event_stamps("stamp_snare",index + 1))
+            stamps.append(event_stamps("stamp_snare",index +1,index))
     for index, item in enumerate(probability_hihat):
         rand2 = random.randint(1,100)
         if (rand2 <= item):
-            stamps.append(event_stamps("stamp_hihat",index + 1))
+            stamps.append(event_stamps("stamp_hihat",index +1,index))
     for index, item in enumerate(probability_djembe):
         rand3 = random.randint(1,100)
         if (rand3 <= item):
-            stamps.append(event_stamps("stamp_djembe",index + 1))
+            stamps.append(event_stamps("stamp_djembe",index +1,index))
+
+            
+
 
 #----------------------------------------------------------------------------------------------#
 #convert the individual stamps to timestamps in ms and collect them all together
-#the time stamp added ios accoring to the stamp. it is converted by the bpm_time
+#the time stamp added is accoring to the stamp. it is converted by the bpm_time
+#in de list is every info for the midi aswell like velocity,place,duration
 timeStamps = []
 def all_stamps():
     random_place()
     samples = ['Kick','Snare','HiHat','Djembe']
     for i in stamps:
         if i["time_sig"] == "stamp_kick":
-            timeStamps.append(event_instrument(samples[0],i["place"] * bpm_time, Kick))
+            timeStamps.append(event_instrument(samples[0],i["place"] * bpm_time,i["place_midi"] * bpm_time, Kick, 120, 60, 0.001))
         if i["time_sig"] == "stamp_snare":
-            timeStamps.append(event_instrument(samples[1],i["place"] * bpm_time, Snare))
+            timeStamps.append(event_instrument(samples[1],i["place"] * bpm_time,i["place_midi"] * bpm_time, Snare, 120, 61, 0.001))
         if i["time_sig"] == "stamp_hihat":
-            timeStamps.append(event_instrument(samples[2],i["place"] * bpm_time, HiHat))
+            timeStamps.append(event_instrument(samples[2],i["place"] * bpm_time,i["place_midi"] * bpm_time, HiHat, 120, 62, 0.001))
         if i["time_sig"] == "stamp_djembe":
-            timeStamps.append(event_instrument(samples[3],i["place"] * bpm_time, Djembe))
+            timeStamps.append(event_instrument(samples[3],i["place"] * bpm_time,i["place_midi"] * bpm_time, Djembe,120, 63, 0.001))
     stamps.clear()
 #functie aanroepen
 all_stamps()
@@ -143,11 +154,33 @@ copyStamps = timeStamps.copy()
 
 
 #----------------------------------------------------------------------------------------------#
+# make a function to make an midi file.
+# https://pypi.org/project/MIDIUtil/
+def midi():
+    print("midi")
+
+    track = 0 
+    timeMidi = 0
+    channel = 0
+
+
+    midi_file = MIDIFile(1) # One track, defaults to format 1 (tempo track
+                        # automatically created)
+    midi_file.addTempo(track, timeMidi, bpmInput)
+
+    for midi in copyStamps:   
+        midi_file.addNote(track, channel, midi['midi_note'], (midi["stamps_midi"] * 2) , 0.1 , 100)
+
+    with open("MidiFile.mid", "wb") as output_file:      
+        midi_file.writeFile(output_file)
+
+#----------------------------------------------------------------------------------------------#
 #get starting point
 time_zero = time.time()
 
 #make a while loop to start the time sequence
-while True:
+play = True
+while play:
     #make a counter to detect later on how many times you played the loop
     counter = 0
     #start the loop
@@ -155,13 +188,11 @@ while True:
         now = time.time() - time_zero
         for i in timeStamps:
             #if the time matches a timeStamps, play the sample attached to it (kick,snare or hihat).
-            if (now >= i["timestamps"]):
+            if (now >= i["stamps"]):
                 i["sample"].play()
-                
-
                 #Remove the timestamps when it played.
                 timeStamps.remove(i)
-
+            
                 #if the timeStamps are empty, fill it with a copy of the loop so it keeps looping.
                 if timeStamps == []:
                     #count up the counter to check in the while loop when it need to be stopped
@@ -175,18 +206,30 @@ while True:
                 
                     else:
                         print("would you like to play the sample")
-                        print("(0) same loop")
-                        print("(1) new loop")
-                        print("(2) stop")
+                        print("(0) play again")
+                        print("(1) print Midi")
+                        print("(2) new loop")
+                        print("(3) stop")
                         again = input("")
                         
+                        #fill the list with the old sequence
                         if again == "0":
-                            #fill the list with the old sequence
                             time_zero = time.time()
                             now = time.time() - time_zero
                             timeStamps = copyStamps
                             copyStamps = timeStamps.copy()
+                        
+                        #make the midi file by rehancing to the midi function
                         if again == "1":
+                            midi()
+                            print("kick = midinumber 60")
+                            print("snare/clap = midinumber 61")
+                            print("hihat= midinumber 62")
+                            print("djembe = midinumber 63")
+                            play = False
+
+                        #fill the list with new samples
+                        if again == "2":
                             timeStamps.clear()
                             copyStamps.clear()
                             all_stamps()
@@ -195,6 +238,10 @@ while True:
                             now = time.time() - time_zero
                             timeStamps = copyStamps
                             copyStamps = timeStamps.copy()
+                        
+                        #stop the sequence
+                        if again == "3":
+                            play = False
 
                             
 
