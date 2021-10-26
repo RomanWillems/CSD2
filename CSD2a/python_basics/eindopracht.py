@@ -33,7 +33,7 @@ bpm_time = bpm_ms / 2
 Kick = sa.WaveObject.from_wave_file("kit/kick.wav")
 
 #ask for clap or snare
-print('choose youre samples!')
+print('choose your samples!')
 print('the kick is default')
 print('(0) = snare')
 print('(1) = clap')
