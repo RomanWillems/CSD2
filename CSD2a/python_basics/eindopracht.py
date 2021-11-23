@@ -63,6 +63,15 @@ if djembe_high_low == "1":
 
 
 #----------------------------------------------------------------------------------------------#
+#make the event to define the place of the kick, and the place of the midi.
+def event_stamps(time_sig,place,place_midi):
+    return{
+        "time_sig": time_sig,
+        "place": place,
+        "place_midi": place_midi
+        
+    }
+
 #make the event to define the timestamps, and add the midi values to read it out later on.
 def event_instrument(instrument,stamps,stamps_midi,sample,velocity,midi_note,midi_dur):
     return{
@@ -76,14 +85,6 @@ def event_instrument(instrument,stamps,stamps_midi,sample,velocity,midi_note,mid
 
         }  
 
-#make the event to define the place of the kick, and the place of the midi.
-def event_stamps(time_sig,place,place_midi):
-    return{
-        "time_sig": time_sig,
-        "place": place,
-        "place_midi": place_midi
-        
-    }
 
 #----------------------------------------------------------------------------------------------#
 #get the wished time signatures
@@ -116,7 +117,7 @@ if choosen_time_signature == "5":
     probability_hihat = [17,43,16,44,15,45,14,46,79,113]
     probability_djembe = [8,25,43,62,42,63,41,18,42,17]
 if choosen_time_signature == "7":
-    #10 numbers is 5/4
+    #14 numbers is 7/4
     probability_kick = [81,35,82,34,83,33,84,32,85,31,86,30,87,29]
     probability_snare = [24,8,25,43,62,42,63,41,18,42,17,43,16,44]
     probability_hihat = [63,41,18,42,17,43,16,44,15,45,14,46,79,113]
