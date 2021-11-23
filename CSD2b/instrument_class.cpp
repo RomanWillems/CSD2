@@ -1,8 +1,18 @@
 #include <iostream>
 
-
-
 //-----------------------------------------------------------------------------//
+
+struct ChooseInstrument {
+    int InstrumentInput;
+    ChooseInstrument() {
+        std::cout << "bongo: (1) " << std::endl;
+        std::cout << "flute: (2) " << std::endl;
+        std::cin >> InstrumentInput;
+    }
+};
+
+ChooseInstrument InstrumentChoise;
+
 class Instrument
 {
 public:
@@ -32,9 +42,12 @@ Instrument::~Instrument()
 //-----------------------------------------------------------------------------//
 int main()
 {
-    Instrument trommel("boemboem");
+
+    std::cout << "choosen instrument=  " << InstrumentChoise.InstrumentInput << '\n';
+
+    Instrument bongo("boemboem");
     Instrument flute("fieeuw");
     
-    trommel.play();
+    bongo.play();
     flute.play();
 }
