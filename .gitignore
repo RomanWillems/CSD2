@@ -1,1 +1,5 @@
 .DS_Store
+
+#get rid of .o
+
+ *.o 
