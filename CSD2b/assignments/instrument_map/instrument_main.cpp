@@ -1,19 +1,11 @@
-#include "instrument.h"
+#include "bongo.h"
+#include "flute.h"
 
-int main()
-{
-    int instrumentInput;
-    std::cout << "bongo: (1) " << std::endl;
-    std::cout << "flute: (2) " << std::endl;
-    std::cin >> instrumentInput;
+int main() {
 
+    Bongo aBongo("boing");
+    Flute aFlute("fieuw");
 
-    Instrument bongo("boemboem");
-    Instrument flute("fieeuw");
-    
-    if (instrumentInput == 1){
-        bongo.play();
-    } else {
-        flute.play();
-    }
+    //end program
+    return 0;
 }
