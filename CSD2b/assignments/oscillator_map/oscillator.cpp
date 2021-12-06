@@ -28,7 +28,7 @@ void Oscillator::setAmp(float amp) {
         this->amp = amp;
     } else {
         std::cout << "The Amplitude value is incorrect " << "please enter a value [0, 1]\n";
-
+        
     }
 }
 
