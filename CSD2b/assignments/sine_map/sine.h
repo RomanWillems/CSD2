@@ -2,12 +2,11 @@
 #define _SINE_H
 #include <iostream>
 
-#define SAMPLERATE 44100
-
-class Sine {
+class Sine 
+{
 public:
     //constuctor and destructor
-    Sine(float frequency);
+    Sine(float frequency, double samplerate);
     ~Sine();
     
     //reurnt current sample
@@ -25,6 +24,7 @@ private:
     float phase;
     //contains current sample
     float sample;
+    double samplerate;
 
 };
 

@@ -1,15 +1,10 @@
 #include "sine.h"
 #include "math.h"
 
-Sine::Sine(float frequency) {
+Sine::Sine(float frequency, double samplerate) : frequency(frequency),
+    samplerate(samplerate), amplitude(1.0), sample(0), phase(0) {
     //constructor
     std::cout << "sine - constructor\n";
-
-    //initzialize members
-    this->frequency = frequency;
-    amplitude = 1.0;
-    sample = 0;
-    phase = 0;
 }
 
 Sine::~Sine() {
@@ -22,7 +17,7 @@ float Sine::getSample() {
 }
 
 void Sine::tick() {
-    phase += frequency / SAMPLERATE;
+    phase += frequency / samplerate;
     sample = sin(M_PI * 2 * phase);
 }
 

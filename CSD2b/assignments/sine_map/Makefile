@@ -1,7 +1,7 @@
 CXX=g++
 CXXFLAGS=-Wall -std=c++14
-LDFLAGS=
-SOURCE= sine.o writeToFile.o main.o
+LDFLAGS=-ljack
+SOURCE= sine.o writeToFile.o jack_module.o main.o
 
 sine: $(SOURCE)
 	$(CXX) -o $@ $(SOURCE) $(LDFLAGS)
