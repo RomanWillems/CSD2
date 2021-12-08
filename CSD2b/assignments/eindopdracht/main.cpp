@@ -9,10 +9,6 @@
 
 //start jack audio
 //jackd -d coreaudio
-
-#define WRITE_TO_FILE 0
-
-
 int main(int argc,char **argv)
 {
 
@@ -22,7 +18,7 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   double samplerate = jack.getSamplerate();
-  Saw sine(220, samplerate);
+  Square sine(220, samplerate);
 
 
 #if WRITE_TO_FILE
