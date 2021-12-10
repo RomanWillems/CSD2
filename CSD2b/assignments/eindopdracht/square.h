@@ -11,21 +11,12 @@ public:
     Square(double frequency, double samplerate);
     ~Square();
 
-    //return the current sample
-    double getSample();
-    //go to next sample
-    void tick();
 
-    //getters and setters
-    void setFrequency(double frequency);
-    double getFrequency();
 
 private:
-    double frequency;
-    double amplitude;
-    double phase;
-    double sample;
-    double samplerate;
+    //calculate the next sample according to square calculation
+    // override base class virtual function.
+    void calculate() override;
 
 };
 

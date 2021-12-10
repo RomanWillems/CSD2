@@ -10,21 +10,12 @@ public:
     Saw(double frequency, double samplerate);
     ~Saw();
 
-    //return the current sample
-    double getSample();
-    //go to next sample
-    void tick();
-
-    //getters and setters
-    void setFrequency(double frequency);
-    double getFrequency();
 
 private:
-    double frequency;
-    double amplitude;
-    double phase;
-    double sample;
-    double samplerate;
+    //calculate the next sample according to saw calculation
+    // override base class virtual function.
+    void calculate() override;
+   
 
 };
 
