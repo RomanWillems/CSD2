@@ -3,7 +3,7 @@
 
 //constructor
 Oscillator::Oscillator(double frequency, double samplerate) : frequency(frequency),
-     amplitude(1.0), phase(), sample(0), samplerate(samplerate)
+    amplitude(1.0), phase(), sample(0), samplerate(samplerate)
 {
     std::cout << "oscillator - constructor\n";
 }
