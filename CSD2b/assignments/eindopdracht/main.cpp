@@ -6,6 +6,7 @@
 #include "square.h"
 #include "saw.h"
 #include "writeToFile.h"
+#include "oscillator.h"
 
 //start jack audio
 //jackd -d coreaudio
@@ -18,7 +19,7 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   double samplerate = jack.getSamplerate();
-  Square sine(220, samplerate);
+  Sine sine(220, samplerate);
 
 
 #if WRITE_TO_FILE

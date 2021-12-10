@@ -3,8 +3,8 @@
 
 //constructor saw
 
-Saw::Saw(double frequency, double samplerate) : frequency(frequency),
-    amplitude(1.0), phase(0), sample(0), samplerate(samplerate)
+Saw::Saw(double frequency, double samplerate) : Oscillator(frequency, samplerate), 
+    frequency(frequency), samplerate(samplerate)
 {
     std::cout << "sine - constructor\n";
 }
@@ -14,27 +14,12 @@ Saw::~Saw() {
     std::cout << "sine - destructor\n";
 }
 
-double Saw::getSample() {
-    return sample;
-}
-
 void Saw::tick() {
-    phase += frequency / samplerate;
+    phase += getFrequency() / getSamplerate();
 
     //calculate a saw wave and wrap the phase
     if(phase > 1) phase -= 1.0;
     sample = phase * 2.0 - 1.0;
     sample *= amplitude; 
 
-}
-
-//getters and setters
-void Saw::setFrequency(double frequency)
-{
-    this->frequency = frequency;
-}
-
-double Saw::getFrequency()
-{
-    return frequency;
 }

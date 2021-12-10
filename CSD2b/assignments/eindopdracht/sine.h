@@ -1,30 +1,21 @@
 #ifndef _SINE_H_
 #define _SINE_H_
 #include <iostream>
+#include "oscillator.h"
 
-class Sine
+class Sine : public Oscillator
 {
 public:
     //constructor and destructor
     Sine(double frequency, double samplerate);
     ~Sine();
 
-    //return the current sample
-    double getSample();
-    //go to next sample
-    void tick();
-
-    //getters and setters
-    void setFrequency(double frequency);
-    double getFrequency();
+   
 
 private:
-    double frequency;
-    double amplitude;
-    double phase;
-    double sample;
-    double samplerate;
-
+    //calculate the next sample according to sine calculation
+    // override base class virtual function
+    void calculate() override;
 };
 
 #endif

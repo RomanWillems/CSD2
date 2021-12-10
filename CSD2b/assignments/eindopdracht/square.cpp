@@ -2,8 +2,8 @@
 #include "math.h"
 
 //constructor sine
-Square::Square(double frequency, double samplerate) : frequency(frequency),
-    amplitude(1.0), phase(0), sample(0), samplerate(samplerate)
+Square::Square(double frequency, double samplerate) : Oscillator(frequency, samplerate), 
+    frequency(frequency), samplerate(samplerate)
 {
     std::cout << "sine - constructor\n";
 }
@@ -13,16 +13,15 @@ Square::~Square() {
     std::cout << "sine - destructor\n";
 }
 
-double Square::getSample() {
-    return sample;
-}
-
 void Square::tick() {
-    phase += frequency / samplerate;
+    phase += getFrequency() / getSamplerate();
 
     //wrap the phae 
     //and calculate the square wave
-    if(phase > 1) phase -= 1.0;
+    if(phase > 1) {
+        phase -= 1.0;
+    }
+
     if(phase < 0.5) {
         sample = 1.0;
     } else {
@@ -32,13 +31,3 @@ void Square::tick() {
     
 }
 
-//getters and setters
-void Square::setFrequency(double frequency)
-{
-    this->frequency = frequency;
-}
-
-double Square::getFrequency()
-{
-    return frequency;
-}
