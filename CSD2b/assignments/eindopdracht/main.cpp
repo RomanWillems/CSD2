@@ -7,6 +7,7 @@
 #include "saw.h"
 #include "writeToFile.h"
 #include "oscillator.h"
+#include "synth.h"
 
 //start jack audio
 //jackd -d coreaudio
@@ -19,16 +20,16 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   double samplerate = jack.getSamplerate();
-  Sine sine(220, samplerate);
+  Synth synth(40, samplerate);
 
   float amplitude = 0.15;
   //assign a function to the JackModule::onProces
-  jack.onProcess = [&sine, &amplitude](jack_default_audio_sample_t *inBuf,
+  jack.onProcess = [&synth, &amplitude](jack_default_audio_sample_t *inBuf,
     jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
 
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = sine.getSample() * amplitude;
-      sine.tick();
+      outBuf[i] = synth.getSample() * amplitude;
+      synth.tick();
     }
 
     amplitude = 0.5;
@@ -42,8 +43,8 @@ int main(int argc,char **argv)
   WriteToFile fileWriter("output.csv", true);
 
   for(int i = 0; i < 500; i++) {
-    fileWriter.write(std::to_string(sine.getSample()) + "\n");
-    sine.tick();
+    fileWriter.write(std::to_string(synth.getSample()) + "\n");
+    synth.tick();
   }
 
   //keep the program running and listen for user input, q = quit

@@ -26,6 +26,8 @@ protected:
 
     double sample;
     Sine sine;
+    Saw saw;
+    Square square;
 
 
 };
