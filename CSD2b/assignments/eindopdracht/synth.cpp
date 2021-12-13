@@ -1,15 +1,21 @@
+#include <iostream>
 #include "synth.h"
+#include "math.h"
 
-Synth::Synth(double samplerate, float midiPitch) : sample(0) {
-
+Synth::Synth(float midiPitch, double samplerate) : sample(0) 
+{
     //TODO- add to constructor
-    setMidiPitch(60)
+    sine.initialize(samplerate);
+    setMidiPitch(midiPitch);
 
 }
 
 Synth::~Synth() {}
 
+
 void Synth::tick() {
+    sine.tick();
+    sample = sine.getSample();
 
 }
 
@@ -22,11 +28,12 @@ void Synth::setMidiPitch(float pitch)
 {
     midiPitch = pitch;
     double freq = mtof(midiPitch);
+    sine.setFrequency(freq);
 }
 
 double Synth::mtof(float pitch)
 {
-    // TODO - implement mtof functionallity
-    return 440;
+    //turn midi notes in to FQ
+    return pow(2.0, (float(pitch) - 69.0) / 12.0) * 440.0;
 }
 

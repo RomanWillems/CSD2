@@ -1,16 +1,15 @@
 #include "square.h"
 #include "math.h"
 
-//constructor sine
-Square::Square(double frequency, double samplerate) : Oscillator(frequency, samplerate)
-{
-    std::cout << "sine - constructor\n";
-}
+//constructors square
+Square::Square() : Square(0, 0) {}
+
+Square::Square(double frequency, double samplerate) 
+    : Oscillator(frequency, samplerate)
+{}
 
 //destructor sine
-Square::~Square() {
-    std::cout << "sine - destructor\n";
-}
+Square::~Square() {}
 
 //calculate the square wave
 void Square::calculate(){

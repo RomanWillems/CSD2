@@ -8,6 +8,7 @@ class Square : public Oscillator
 {
 public:
     //constructor and destructor
+    Square();
     Square(double frequency, double samplerate);
     ~Square();
 

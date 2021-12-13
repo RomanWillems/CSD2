@@ -9,6 +9,8 @@ public:
     Oscillator(double frequency, double samplerate);
     ~Oscillator();
 
+    void initialize(double samplerate);
+
     //return current sample
     double getSample();
     //go to next sample
@@ -17,10 +19,6 @@ public:
     //getters and setters
     void setFrequency(double frequency);
     double getFrequency();
-
-    void setSamplerate(double samplerate);
-    double getSamplerate();   
-
     
 protected:
     virtual void calculate() = 0;

@@ -2,15 +2,17 @@
 #include "math.h"
 
 //constructor
-Oscillator::Oscillator(double frequency, double samplerate) : frequency(frequency),
-    amplitude(1.0), phase(), sample(0), samplerate(samplerate)
+Oscillator::Oscillator(double frequency, double samplerate) : 
+    frequency(frequency), amplitude(1.0), phase(0), 
+    sample(0), samplerate(samplerate)
 {
-    std::cout << "oscillator - constructor\n";
+
 }
 
-Oscillator::~Oscillator() {
+Oscillator::~Oscillator() {}
 
-    std::cout << "oscillator - destructor";
+void Oscillator::initialize(double samplerate) {
+     this->samplerate = samplerate;
 }
 
 double Oscillator::getSample() {
@@ -19,7 +21,7 @@ double Oscillator::getSample() {
 
 
 void Oscillator::tick() {
-    phase += getFrequency() / getSamplerate();
+    phase += getFrequency() / samplerate;
 
     //wrap
     if (phase > 1) phase -= 1.0;
@@ -40,15 +42,6 @@ double Oscillator::getFrequency() {
     return frequency;
 }
 
-void Oscillator::setSamplerate(double samplerate) {
-
-    this->samplerate = samplerate;
-}
-
-double Oscillator::getSamplerate() {
-
-    return samplerate;
-}
 
 
 

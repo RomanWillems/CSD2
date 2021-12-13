@@ -19,7 +19,7 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   double samplerate = jack.getSamplerate();
-  Saw sine(220, samplerate);
+  Sine sine(220, samplerate);
 
   float amplitude = 0.15;
   //assign a function to the JackModule::onProces

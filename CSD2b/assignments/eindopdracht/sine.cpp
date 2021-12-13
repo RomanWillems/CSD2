@@ -1,17 +1,15 @@
 #include "sine.h"
 #include "math.h"
 
-//constructor sine
-Sine::Sine(double frequency, double samplerate) : Oscillator(frequency, samplerate)
+//constructors sine
+Sine::Sine() : Sine(0, 0) {}
 
-{
-    std::cout << "sine - constructor\n";
-}
+Sine::Sine(double frequency, double samplerate) 
+    : Oscillator(frequency, samplerate)
+{}
 
 //destructor sine
-Sine::~Sine() {
-    std::cout << "sine - destructor\n";
-}
+Sine::~Sine() {}
 
 
 void Sine::calculate(){
