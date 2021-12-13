@@ -19,17 +19,7 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   double samplerate = jack.getSamplerate();
-  Sine sine(220, samplerate);
-
-
-#if WRITE_TO_FILE
-  WriteToFile fileWriter("output.csv", true);
-
-  for(int i = 0; i < 500; i++) {
-    fileWriter.write(std::to_string(sine.getSample()) + "\n");
-    sine.tick();
-  }
-#else
+  Saw sine(220, samplerate);
 
   float amplitude = 0.15;
   //assign a function to the JackModule::onProces
@@ -47,6 +37,15 @@ int main(int argc,char **argv)
 
   jack.autoConnect();
 
+  
+  //Write the values of the waveform in to an csv file 
+  WriteToFile fileWriter("output.csv", true);
+
+  for(int i = 0; i < 500; i++) {
+    fileWriter.write(std::to_string(sine.getSample()) + "\n");
+    sine.tick();
+  }
+
   //keep the program running and listen for user input, q = quit
   std::cout << "\n\nPress 'q' when you want to quit the program.\n";
   bool running = true;
@@ -60,7 +59,6 @@ int main(int argc,char **argv)
         break;
     }
   }
-#endif
   //end the program
   return 0;
 
