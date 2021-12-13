@@ -13,6 +13,11 @@ Oscillator::~Oscillator() {
     std::cout << "oscillator - destructor";
 }
 
+double Oscillator::getSample() {
+    return sample;
+}
+
+
 void Oscillator::tick() {
     phase += getFrequency() / getSamplerate();
 
