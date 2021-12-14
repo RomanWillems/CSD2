@@ -7,7 +7,6 @@
 
 #ifndef _JACK_MODULE_H_
 #define _JACK_MODULE_H_
-
 #include <string>
 #include <functional>
 #include <jack/jack.h>

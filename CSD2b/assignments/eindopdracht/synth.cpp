@@ -4,9 +4,10 @@
 
 Synth::Synth(float midiPitch, double samplerate) : sample(0) 
 {
-    //TODO- add to constructor
-    saw.initialize(samplerate);
-    setMidiPitch(midiPitch);
+    this->midiPitch = midiPitch;
+    this->samplerate = samplerate;
+
+    // setMidiPitch(midiPitch);
 
 }
 
@@ -14,8 +15,7 @@ Synth::~Synth() {}
 
 
 void Synth::tick() {
-    saw.tick();
-    sample = saw.getSample();
+    calculate();
 
 }
 
@@ -28,7 +28,6 @@ void Synth::setMidiPitch(float pitch)
 {
     midiPitch = pitch;
     double freq = mtof(midiPitch);
-    saw.setFrequency(freq);
 }
 
 double Synth::mtof(float pitch)

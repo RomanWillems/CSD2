@@ -7,7 +7,7 @@ class Oscillator {
 public:
     //constructor destructor
     Oscillator(double frequency, double samplerate);
-    ~Oscillator();
+    virtual ~Oscillator();
 
     void initialize(double samplerate);
 

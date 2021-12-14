@@ -10,7 +10,7 @@ class Synth
 {
 public:
     Synth(float midiPitch, double samplerate);
-    ~Synth();
+    virtual ~Synth();
 
     //go to next sample
     void tick();
@@ -19,16 +19,19 @@ public:
     double getSample();
     void setMidiPitch(float pitch);
 
+
 protected:
     float midiPitch;
+    double samplerate;
     //returns a frequency
     double mtof(float pitch);
-
     double sample;
     Sine sine;
     Saw saw;
     Square square;
 
+private:
+    virtual void calculate() = 0;
 
 };
 

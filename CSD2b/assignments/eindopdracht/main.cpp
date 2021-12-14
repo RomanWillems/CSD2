@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <thread>
 #include "jack_module.h"
@@ -7,20 +8,25 @@
 #include "saw.h"
 #include "writeToFile.h"
 #include "oscillator.h"
-#include "synth.h"
+#include "FM_synth.h"
 
 //start jack audio
 //jackd -d coreaudio
 int main(int argc,char **argv)
 {
-
+  std::cout << "doet main het\n";
   // create a JackModule instance
   JackModule jack;
 
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   double samplerate = jack.getSamplerate();
-  Synth synth(40, samplerate);
+
+  std::cout << "doet jacky d het\n";
+
+  FM_synth synth(40, samplerate);
+
+  std::cout << "doet fm synth het\n";
 
   float amplitude = 0.15;
   //assign a function to the JackModule::onProces
@@ -32,7 +38,7 @@ int main(int argc,char **argv)
       synth.tick();
     }
 
-    amplitude = 0.5;
+    amplitude =  0.5;
     return 0;
   };
 

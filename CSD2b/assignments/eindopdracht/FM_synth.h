@@ -1,23 +1,18 @@
 #include <iostream>
-#include "sine.h"
 #include "saw.h"
-#include "square.h"
-#include "math.h"
-#include "writeToFile.h"
 #include "synth.h"
 
 #pragma once
 
 class FM_synth : public Synth {
 public:
-    FM_synth();
+    FM_synth(float midiPitch, double samplerate);
     ~FM_synth();
+    
+    void initOsc(std::string type,std::string waveform);
 
-    void Carrier();
-    void Modulator();
-
-    float calculate();
-    void tick();
-    float getSample();
-    float setFrequency();
+private:
+    void calculate() override;
+    Oscillator* carrier;
+    Oscillator* modulator;
 };
