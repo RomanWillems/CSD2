@@ -1,17 +1,17 @@
 #include <iostream>
-#include "FM_synth.h"
+#include "Ring_synth.h"
 #include "math.h"
 #define SAMPLERATE 44100
 
 
-FM_synth::FM_synth(float midiPitch, double samplerate) 
+Ring_synth::Ring_synth(float midiPitch, double samplerate) 
     : Synth(midiPitch, samplerate)
 {
-    initOscCar("carrier", "square");
+    initOscCar("carrier", "sine");
     initOscMod("modulator", "saw");
 }
 
-FM_synth::~FM_synth() {
+Ring_synth::~Ring_synth() {
 
     delete carrier;
     carrier = nullptr;
@@ -21,20 +21,19 @@ FM_synth::~FM_synth() {
 
 }
 
-void FM_synth::initOscCar(std::string type,std::string waveform) 
+void Ring_synth::initOscCar(std::string type,std::string waveform) 
 {
     carrier = new Sine(mtof(midiPitch), samplerate);
+    modulator = new Sine(mtof(midiPitch), samplerate);
 
     if(waveform == "sine") {
         carrier = new Sine(mtof(midiPitch), samplerate);
     } else if(waveform == "saw") {
         carrier = new Saw(mtof(midiPitch), samplerate);
-    } else if(waveform == "square") {
-        carrier = new Square(mtof(midiPitch), samplerate);
     }
 }
 
-void FM_synth::initOscMod(std::string type,std::string waveform) 
+void Ring_synth::initOscMod(std::string type,std::string waveform) 
 {
     modulator = new Sine(mtof(midiPitch), samplerate);
 
@@ -42,16 +41,13 @@ void FM_synth::initOscMod(std::string type,std::string waveform)
         modulator = new Sine(mtof(midiPitch), samplerate);
     } else if(waveform == "saw") {
         modulator = new Saw(mtof(midiPitch), samplerate);
-    } else if (waveform == "square") {
-        modulator = new Square(mtof(midiPitch), samplerate);
     }
 }
 
-void FM_synth::calculate() {
+void Ring_synth::calculate() {
     carrier->tick();
     modulator->tick();
     // sample = carrier->getSample() * modulator->getSample();
-    sample = (pow(1.1,modulator->getSample() + carrier->getSample())) - 1;
-
+    sample = (carrier->getSample() + modulator->getSample()) / 2;
 }
 

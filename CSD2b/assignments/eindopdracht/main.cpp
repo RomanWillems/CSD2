@@ -9,6 +9,7 @@
 #include "writeToFile.h"
 #include "oscillator.h"
 #include "FM_synth.h"
+#include "Ring_synth.h"
 
 //start jack audio
 //jackd -d coreaudio

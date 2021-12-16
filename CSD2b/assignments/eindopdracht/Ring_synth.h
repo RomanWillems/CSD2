@@ -3,10 +3,10 @@
 
 #pragma once
 
-class FM_synth : public Synth {
+class Ring_synth: public Synth {
 public:
-    FM_synth(float midiPitch, double samplerate);
-    ~FM_synth();
+    Ring_synth(float midiPitch, double samplerate);
+    ~Ring_synth();
     
     void initOscCar(std::string type,std::string waveform);
     void initOscMod(std::string type,std::string waveform);
