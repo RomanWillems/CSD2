@@ -7,7 +7,7 @@
 FM_synth::FM_synth(float midiPitch, double samplerate) 
     : Synth(midiPitch, samplerate)
 {
-    initOscCar("carrier", "square");
+    initOscCar("carrier", "sine");
     initOscMod("modulator", "saw");
 }
 
@@ -23,8 +23,7 @@ FM_synth::~FM_synth() {
 
 void FM_synth::initOscCar(std::string type,std::string waveform) 
 {
-    carrier = new Sine(mtof(midiPitch), samplerate);
-
+    midiPitch = midiPitch;
     if(waveform == "sine") {
         carrier = new Sine(mtof(midiPitch), samplerate);
     } else if(waveform == "saw") {
@@ -36,7 +35,7 @@ void FM_synth::initOscCar(std::string type,std::string waveform)
 
 void FM_synth::initOscMod(std::string type,std::string waveform) 
 {
-    modulator = new Sine(mtof(midiPitch), samplerate);
+    midiPitch = midiPitch + 10;
 
     if(waveform == "sine") {
         modulator = new Sine(mtof(midiPitch), samplerate);
@@ -51,7 +50,6 @@ void FM_synth::calculate() {
     carrier->tick();
     modulator->tick();
     // sample = carrier->getSample() * modulator->getSample();
-    sample = (pow(1.1,modulator->getSample() + carrier->getSample())) - 1;
-
+    sample = modulator->getSample() * carrier->getSample();
 }
 

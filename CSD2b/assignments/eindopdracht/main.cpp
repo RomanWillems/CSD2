@@ -11,6 +11,9 @@
 #include "FM_synth.h"
 #include "Ring_synth.h"
 
+#define WRITE_TO_FILE 0
+#define SAMPLERATE 44100
+
 //start jack audio
 //jackd -d coreaudio
 int main(int argc,char **argv)
@@ -25,9 +28,19 @@ int main(int argc,char **argv)
 
   std::cout << "doet jacky d het\n";
 
-  FM_synth synth(40, samplerate);
+  Ring_synth synth(40, samplerate);
 
   std::cout << "doet fm synth het\n";
+
+#if WRITE_TO_FILE
+  WriteToFile fileWriter("output.csv", true);
+
+  for(int i = 0; i < SAMPLERATE; i++) {
+    fileWriter.write(std::to_string(synth.getSample()) + "\n");
+    synth.tick();
+  }
+#else
+
 
   float amplitude = 0.15;
   //assign a function to the JackModule::onProces
@@ -45,14 +58,6 @@ int main(int argc,char **argv)
 
   jack.autoConnect();
 
-  
-  //Write the values of the waveform in to an csv file 
-  WriteToFile fileWriter("output.csv", true);
-
-  for(int i = 0; i < 500; i++) {
-    fileWriter.write(std::to_string(synth.getSample()) + "\n");
-    synth.tick();
-  }
 
   //keep the program running and listen for user input, q = quit
   std::cout << "\n\nPress 'q' when you want to quit the program.\n";
@@ -67,7 +72,11 @@ int main(int argc,char **argv)
         break;
     }
   }
+
+#endif
   //end the program
   return 0;
 
+
 } // main()
+

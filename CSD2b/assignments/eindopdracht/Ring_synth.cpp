@@ -23,24 +23,26 @@ Ring_synth::~Ring_synth() {
 
 void Ring_synth::initOscCar(std::string type,std::string waveform) 
 {
-    carrier = new Sine(mtof(midiPitch), samplerate);
-    modulator = new Sine(mtof(midiPitch), samplerate);
-
+    midiPitch = midiPitch;
     if(waveform == "sine") {
         carrier = new Sine(mtof(midiPitch), samplerate);
     } else if(waveform == "saw") {
         carrier = new Saw(mtof(midiPitch), samplerate);
+    } else if(waveform == "square") {
+        carrier = new Square(mtof(midiPitch), samplerate);
     }
 }
 
 void Ring_synth::initOscMod(std::string type,std::string waveform) 
 {
-    modulator = new Sine(mtof(midiPitch), samplerate);
+    midiPitch = midiPitch + 10;
 
     if(waveform == "sine") {
         modulator = new Sine(mtof(midiPitch), samplerate);
     } else if(waveform == "saw") {
         modulator = new Saw(mtof(midiPitch), samplerate);
+    } else if (waveform == "square") {
+        modulator = new Square(mtof(midiPitch), samplerate);
     }
 }
 
@@ -48,6 +50,6 @@ void Ring_synth::calculate() {
     carrier->tick();
     modulator->tick();
     // sample = carrier->getSample() * modulator->getSample();
-    sample = (carrier->getSample() + modulator->getSample()) / 2;
+    sample = (carrier->getSample() * modulator->getSample()) / 2;
 }
 
