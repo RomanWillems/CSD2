@@ -15,11 +15,11 @@ public:
     void initOscMod(std::string type,std::string waveform);\
     void setCarFreq(double carFreq);
     void setModFreq(double modFreq);
-    void setModDepth(double modIndex);
+    void setModIndex(double modIndex);
     void setRatio(double ratio);
+    void calculate();
 
 private:
-    void calculate() override;
     Oscillator* carrier;
     Oscillator* modulator;
     double carFreq;

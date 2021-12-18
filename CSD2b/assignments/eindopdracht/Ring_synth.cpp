@@ -8,14 +8,14 @@ Ring_synth::Ring_synth(float midiPitch, double samplerate)
     : Synth(midiPitch, samplerate)
 {
     initOscCar("carrier", "sine");
-    initOscMod("modulator", "saw");
+    initOscMod("modulator", "sine");
 }
 
 Ring_synth::~Ring_synth() {
 
     delete carrier;
     carrier = nullptr;
-
+    
     delete modulator;
     modulator = nullptr;
 
@@ -35,7 +35,7 @@ void Ring_synth::initOscCar(std::string type,std::string waveform)
 
 void Ring_synth::initOscMod(std::string type,std::string waveform) 
 {
-    midiPitch = midiPitch + 10;
+    midiPitch = midiPitch + 20;
 
     if(waveform == "sine") {
         modulator = new Sine(mtof(midiPitch), samplerate);

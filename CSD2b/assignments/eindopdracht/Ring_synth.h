@@ -11,8 +11,10 @@ public:
     void initOscCar(std::string type,std::string waveform);
     void initOscMod(std::string type,std::string waveform);
 
+    void calculate();
+    
+
 private:
-    void calculate() override;
     Oscillator* carrier;
     Oscillator* modulator;
 };

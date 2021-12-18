@@ -27,7 +27,6 @@ double Synth::getSample()
 void Synth::setMidiPitch(float pitch)
 {
     midiPitch = pitch;
-    double freq = mtof(midiPitch);
 }
 
 
