@@ -18,19 +18,15 @@
 //jackd -d coreaudio
 int main(int argc,char **argv)
 {
-  std::cout << "doet main het\n";
   // create a JackModule instance
   JackModule jack;
 
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
+  
   double samplerate = jack.getSamplerate();
 
-  std::cout << "doet jacky d het\n";
-
-  Ring_synth synth(40, samplerate);
-
-  std::cout << "doet fm synth het\n";
+  FM_synth synth(40, samplerate);
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
@@ -40,7 +36,6 @@ int main(int argc,char **argv)
     synth.tick();
   }
 #else
-
 
   float amplitude = 0.15;
   //assign a function to the JackModule::onProces
@@ -77,6 +72,4 @@ int main(int argc,char **argv)
   //end the program
   return 0;
 
-
-} // main()
-
+} 

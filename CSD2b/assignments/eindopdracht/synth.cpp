@@ -30,6 +30,8 @@ void Synth::setMidiPitch(float pitch)
     double freq = mtof(midiPitch);
 }
 
+
+
 double Synth::mtof(float pitch)
 {
     //turn midi notes in to FQ

@@ -19,6 +19,7 @@ public:
     //getters and setters
     void setFrequency(double frequency);
     double getFrequency();
+
     
 protected:
     virtual void calculate() = 0;
@@ -27,6 +28,7 @@ protected:
     double sample;
     double phase;
     double amplitude;
+
 };
 
 

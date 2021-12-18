@@ -42,6 +42,7 @@ double Oscillator::getFrequency() {
     return frequency;
 }
 
+  
 
 
 
