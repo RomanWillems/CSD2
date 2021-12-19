@@ -7,8 +7,7 @@ class Saw : public Oscillator
 {
 public:
     //constructor and destructor
-    Saw();
-    Saw(double frequency, double samplerate);
+    Saw(double samplerate);
     ~Saw();
 
 

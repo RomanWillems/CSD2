@@ -2,21 +2,20 @@
 #include "synth.h"
 #include "math.h"
 
-Synth::Synth(float midiPitch, double samplerate) : sample(0) 
+Synth::Synth(double samplerate) : sample(0) 
 {
-    this->midiPitch = midiPitch;
     this->samplerate = samplerate;
 
+    // std::cout << midiPitch << std::endl;
     // setMidiPitch(midiPitch);
 
 }
-
 Synth::~Synth() {}
 
 
 void Synth::tick() {
-    calculate();
-
+    
+    sample = calculate();
 }
 
 double Synth::getSample() 
@@ -29,11 +28,9 @@ void Synth::setMidiPitch(float pitch)
     midiPitch = pitch;
 }
 
-
-
 double Synth::mtof(float pitch)
 {
     //turn midi notes in to FQ
-    return pow(2.0, (float(pitch) - 69.0) / 12.0) * 440.0;
+    return 440.0 * pow(2.0 , ((pitch-57.0)/12.0));
 }
 

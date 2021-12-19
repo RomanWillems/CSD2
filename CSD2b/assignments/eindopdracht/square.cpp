@@ -2,10 +2,8 @@
 #include "math.h"
 
 //constructors square
-Square::Square() : Square(0, 0) {}
-
-Square::Square(double frequency, double samplerate) 
-    : Oscillator(frequency, samplerate)
+Square::Square(double samplerate) 
+    : Oscillator(samplerate)
 {}
 
 //destructor sine
@@ -19,7 +17,6 @@ void Square::calculate(){
     } else {
         sample = -1.0;
     }
-
     //TODO - put in baseclass
     sample += amplitude;
 }

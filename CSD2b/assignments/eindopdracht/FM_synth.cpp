@@ -4,12 +4,11 @@
 #define SAMPLERATE 44100
 
 
-FM_synth::FM_synth(float midiPitch, double samplerate)
-    : Synth(midiPitch, samplerate)
+FM_synth::FM_synth(double samplerate)
+    : Synth(samplerate)
 {
-    initOscCar("carrier", "sine");
-    initOscMod("modulator", "sine");
-}
+    carrier = new Sine(samplerate);
+    modulator = new Sine(samplerate);}
 
 FM_synth::~FM_synth() 
 {
@@ -32,28 +31,6 @@ void FM_synth::setCarPitch(float midiPitch)
   this->carFreq = mtof(midiPitch);
 }
 
-void FM_synth::initOscCar(std::string type,std::string waveform) 
-{
-    if(waveform == "sine") {
-        carrier = new Sine(carFreq, samplerate);
-    } else if(waveform == "saw") {
-        carrier = new Saw(carFreq, samplerate);
-    } else if(waveform == "square") {
-        carrier = new Square(carFreq, samplerate);
-    }
-}
-
-void FM_synth::initOscMod(std::string type,std::string waveform) 
-{
-    if(waveform == "sine") {
-        modulator = new Sine(modFreq, samplerate);
-    } else if(waveform == "saw") {
-        modulator = new Saw(modFreq, samplerate);
-    } else if (waveform == "square") {
-        modulator = new Square(modFreq, samplerate);
-    }
-}
-
 void FM_synth::setRatio(double ratio) 
 {
   this->ratio = 1.07;
@@ -69,8 +46,8 @@ void FM_synth::setModIndex()
 //calculate the nieuw sample
 float FM_synth::calculate() 
 {
-    modulator->tick(); 
-    carrier->tick();
+    modulator->tick(modFreq); 
+    carrier->tick(carFreq);
     carrier->setFrequency(((modulator->getSample() * modIndex)) + carrier->getSample());
     sample = carrier->getSample();
     return sample;

@@ -27,11 +27,12 @@ JackModule jack;
 jack.init(argv[0]);
 double samplerate = jack.getSamplerate();
 
-Ring_synth synth(40, samplerate);
+Ring_synth synth(samplerate);
+synth.resetPhase();
 synth.setModFreq(100);
 synth.setCarPitch(60);
-// synth.setRatio(1.7);
-// synth.setModIndex();
+//synth.setRatio(1.7);
+//synth.setModIndex();
 
 float amplitude = 0.15;
 
@@ -65,7 +66,7 @@ float amplitude = 0.15;
             newPitch = 0; 
               }
           float pitch = pitches[newPitch]; 
-          synth.setMidiPitch(pitch);
+          synth.setCarPitch(pitch);
 
           std::cout << pitch << std::endl;
 

@@ -6,7 +6,7 @@ class Oscillator {
 
 public:
     //constructor destructor
-    Oscillator(double frequency, double samplerate);
+    Oscillator(double samplerate);
     virtual ~Oscillator();
 
     void initialize(double samplerate);
@@ -14,11 +14,12 @@ public:
     //return current sample
     double getSample();
     //go to next sample
-    void tick();
+    void tick(double frequency);
 
     //getters and setters
     void setFrequency(double frequency);
     double getFrequency();
+    void resetPhase();
 
     
 protected:

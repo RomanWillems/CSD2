@@ -8,7 +8,7 @@
 
 class FM_synth : public Synth {
 public:
-    FM_synth(float midiPitch, double samplerate);
+    FM_synth(double samplerate);
     ~FM_synth();
     
     void initOscCar(std::string type,std::string waveform);

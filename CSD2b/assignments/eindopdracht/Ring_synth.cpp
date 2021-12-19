@@ -4,11 +4,11 @@
 #define SAMPLERATE 44100
 
 
-Ring_synth::Ring_synth(float midiPitch, double samplerate) 
-    : Synth(midiPitch, samplerate)
+Ring_synth::Ring_synth(double samplerate) 
+    : Synth(samplerate)
 {
-    initOscCar("carrier", "sine");
-    initOscMod("modulator", "sine");
+    carrier = new Sine(samplerate);
+    modulator = new Sine(samplerate);
 }
 
 Ring_synth::~Ring_synth() 
@@ -20,47 +20,54 @@ Ring_synth::~Ring_synth()
     modulator = nullptr;
 }
 
+void Ring_synth::resetPhase() 
+{
+    carrier->resetPhase();
+    modulator->resetPhase();
+}
 
 // set frequency's
 void Ring_synth::setModFreq(double modFreq) 
 {
-    this->modFreq = 100;
+    this->modFreq = modFreq;
+    std::cout << "modFreq" << modFreq << std::endl;
+
+}
+
+float Ring_synth::getModFreq()
+{
+    return modFreq;
 }
 
 void Ring_synth::setCarPitch(float midiPitch) 
 {
-    this->carFreq = mtof(midiPitch);
+    this->midiPitch = midiPitch;
+    setCarFreq(midiPitch);
+}
+
+float Ring_synth::getCarPitch() 
+{   
+    return midiPitch;
     
-
 }
 
-void Ring_synth::initOscCar(std::string type,std::string waveform) 
+void Ring_synth::setCarFreq(float carFreq)
 {
-    if(waveform == "sine") {
-        carrier = new Sine(carFreq, samplerate);
-    } else if(waveform == "saw") {
-        carrier = new Saw(carFreq, samplerate);
-    } else if(waveform == "square") {
-        carrier = new Square(carFreq, samplerate);
-    }
+    this->carFreq = mtof(midiPitch);   
+    
 }
 
-void Ring_synth::initOscMod(std::string type,std::string waveform) 
+float Ring_synth::getCarFreq()
 {
-    if(waveform == "sine") {
-        modulator = new Sine(modFreq, samplerate);
-    } else if(waveform == "saw") {
-        modulator = new Saw(modFreq, samplerate);
-    } else if (waveform == "square") {
-        modulator = new Square(modFreq, samplerate);
-    }
+    return carFreq;
 }
 
 float Ring_synth::calculate() {
-    carrier->tick();
-    modulator->tick();
+
+    carrier->tick(carFreq);
+    modulator->tick(modFreq);
     // sample = carrier->getSample() * modulator->getSample();
-    sample = (carrier->getSample() * modulator->getSample()) / 2;
+    sample = (carrier->getSample() * modulator->getSample());
     return sample;
 
 }

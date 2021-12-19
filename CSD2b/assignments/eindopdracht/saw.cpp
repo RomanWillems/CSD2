@@ -2,10 +2,8 @@
 #include "math.h"
 
 //constructor saw
-Saw::Saw() : Saw(0, 0) {}
-
-Saw::Saw(double frequency, double samplerate) 
-    : Oscillator(frequency, samplerate)
+Saw::Saw(double samplerate) 
+    : Oscillator(samplerate)
 {}
 
 //destructor sine
