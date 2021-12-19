@@ -13,11 +13,11 @@ public:
     
     void initOscCar(std::string type,std::string waveform);
     void initOscMod(std::string type,std::string waveform);\
-    void setCarFreq(double carFreq);
+    void setCarPitch(float midiPitch);
     void setModFreq(double modFreq);
-    void setModIndex(double modIndex);
+    void setModIndex();
     void setRatio(double ratio);
-    void calculate();
+    float calculate() override;
 
 private:
     Oscillator* carrier;

@@ -11,45 +11,57 @@ Ring_synth::Ring_synth(float midiPitch, double samplerate)
     initOscMod("modulator", "sine");
 }
 
-Ring_synth::~Ring_synth() {
-
+Ring_synth::~Ring_synth() 
+{
     delete carrier;
     carrier = nullptr;
     
     delete modulator;
     modulator = nullptr;
+}
+
+
+// set frequency's
+void Ring_synth::setModFreq(double modFreq) 
+{
+    this->modFreq = 100;
+}
+
+void Ring_synth::setCarPitch(float midiPitch) 
+{
+    this->carFreq = mtof(midiPitch);
+    
 
 }
 
 void Ring_synth::initOscCar(std::string type,std::string waveform) 
 {
-    midiPitch = midiPitch;
     if(waveform == "sine") {
-        carrier = new Sine(mtof(midiPitch), samplerate);
+        carrier = new Sine(carFreq, samplerate);
     } else if(waveform == "saw") {
-        carrier = new Saw(mtof(midiPitch), samplerate);
+        carrier = new Saw(carFreq, samplerate);
     } else if(waveform == "square") {
-        carrier = new Square(mtof(midiPitch), samplerate);
+        carrier = new Square(carFreq, samplerate);
     }
 }
 
 void Ring_synth::initOscMod(std::string type,std::string waveform) 
 {
-    midiPitch = midiPitch + 20;
-
     if(waveform == "sine") {
-        modulator = new Sine(mtof(midiPitch), samplerate);
+        modulator = new Sine(modFreq, samplerate);
     } else if(waveform == "saw") {
-        modulator = new Saw(mtof(midiPitch), samplerate);
+        modulator = new Saw(modFreq, samplerate);
     } else if (waveform == "square") {
-        modulator = new Square(mtof(midiPitch), samplerate);
+        modulator = new Square(modFreq, samplerate);
     }
 }
 
-void Ring_synth::calculate() {
+float Ring_synth::calculate() {
     carrier->tick();
     modulator->tick();
     // sample = carrier->getSample() * modulator->getSample();
     sample = (carrier->getSample() * modulator->getSample()) / 2;
+    return sample;
+
 }
 

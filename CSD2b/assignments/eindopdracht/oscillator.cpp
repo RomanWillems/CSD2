@@ -3,10 +3,10 @@
 
 //constructor
 Oscillator::Oscillator(double frequency, double samplerate) : 
-    frequency(frequency), amplitude(1.0), phase(0), 
-    sample(0), samplerate(samplerate)
+    frequency(frequency), samplerate(samplerate), 
+    sample(0), phase(0), amplitude(1.0)
 {
-
+    
 }
 
 Oscillator::~Oscillator() {}
@@ -20,30 +20,28 @@ double Oscillator::getSample() {
 }
 
 
-void Oscillator::tick() {
-    phase += getFrequency() / samplerate;
 
-    //wrap
-    if (phase > 1) phase -= 1.0;
-
-    //let subclasses calculate next sample
-
-    calculate();
-    //add calculate with virutal
-}
-
-void Oscillator::setFrequency(double frequency) {
-
+void Oscillator::setFrequency(double frequency) 
+{
     this->frequency = frequency;
 }
 
 double Oscillator::getFrequency() {
-    
     return frequency;
 }
 
-  
 
+//iets mis met phase, geeft een heel raar getal
+//frequency klopt niet
+void Oscillator::tick() 
+{
+    phase += frequency / samplerate;
+    //wrap
+    if (phase > 1) phase -= 1.0;
+    //let subclasses calculate next sample
+    calculate();
+    //add calculate with virutal
 
-
+    std::cout << "phase =" << phase << std::endl;
+}
 
