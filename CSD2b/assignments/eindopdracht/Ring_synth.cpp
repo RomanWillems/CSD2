@@ -51,7 +51,7 @@ float Ring_synth::getCarPitch()
     
 }
 
-void Ring_synth::setCarFreq(float carFreq)
+void Ring_synth::setCarFreq(float midiPitch)
 {
     this->carFreq = mtof(midiPitch);   
     
@@ -66,7 +66,6 @@ float Ring_synth::calculate() {
 
     carrier->tick(carFreq);
     modulator->tick(modFreq);
-    // sample = carrier->getSample() * modulator->getSample();
     sample = (carrier->getSample() * modulator->getSample());
     return sample;
 

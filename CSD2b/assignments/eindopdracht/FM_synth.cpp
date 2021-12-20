@@ -31,7 +31,7 @@ void FM_synth::setModFreq(double modFreq)
   this->modFreq = modFreq;
   modulator->setFrequency(modFreq);
 
-  std::cout << "modFreq =" << modFreq << std::endl;
+  // std::cout << "modFreq =" << modFreq << std::endl;
 }
 
 float FM_synth::getModFreq()
@@ -60,7 +60,9 @@ void FM_synth::setCarFreq(float midiPitch)
 
 float FM_synth::getCarFreq()
 {
-    return carFreq;
+  // carFreq = carrier->getFrequency();
+  // std::cout << "carFreq = " << carFreq << std::endl;
+  return carFreq;
 }
 
 //set FM parameters
@@ -74,19 +76,21 @@ float FM_synth::getRatio()
   return ratio;
 }
 
-void FM_synth::setModIndex() 
+void FM_synth::setModIndex(double ratio, float carFreq) 
 {
     //modIndex = (ratio * mtof(midiPitch)) * ADSR
   modIndex = (ratio * carFreq) * 4;
+  // std::cout << "carFreq = " << carFreq << std::endl;
+
 }
 
 //calculate the new sample
 float FM_synth::calculate() 
 {
-  carrier->tick(carFreq);
-  modulator->tick(getModFreq()); 
-  carrier->setFrequency(modulator->getSample() + carrier->getFrequency());  
-  std::cout << "carfreq = " << carrier->getFrequency() << std::endl;
+  modulator->tick(modFreq); 
+  // carrier->setFrequency((modulator->getSample() + carFreq) * 7);  
+  carrier->tick(modulator->getSample() + carFreq);
+  // std::cout << "carFreq = " << carrier->getFrequency() << std::endl;
   sample = carrier->getSample();
   return sample;
 }

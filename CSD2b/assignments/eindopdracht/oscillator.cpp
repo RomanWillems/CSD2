@@ -37,7 +37,7 @@ double Oscillator::getFrequency()
 //frequency klopt niet
 void Oscillator::tick(double frequency) 
 {
-    phase += frequency / samplerate;
+    phase += getFrequency() / samplerate;
     //wrap
     if (phase > 1) phase -= 1.0;
     //let subclasses calculate next sample

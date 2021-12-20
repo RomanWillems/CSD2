@@ -19,7 +19,7 @@ public:
     float getCarPitch();
     void setCarFreq(float midiPitch);
     float getCarFreq();
-    void setModIndex();
+    void setModIndex(double ratio, float carFreq);
     void setRatio(double ratio);
     float getRatio();
     float calculate() override;

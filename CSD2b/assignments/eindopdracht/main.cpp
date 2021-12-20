@@ -19,7 +19,6 @@
 //jackd -d coreaudio
 int main(int argc,char **argv)
 {
-
   
 // create a JackModule instance
 JackModule jack;
@@ -31,9 +30,9 @@ FM_synth synth(samplerate);
 synth.resetPhase();
 synth.setModFreq(100);
 synth.setRatio(1.2);
-synth.setModIndex();
+synth.setModIndex(1.2, synth.getCarFreq());
 
-float amplitude = 0.15;
+float amplitude = 0.2;
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
