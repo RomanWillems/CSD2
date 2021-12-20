@@ -20,19 +20,18 @@
 int main(int argc,char **argv)
 {
 
-  
 // create a JackModule instance
 JackModule jack;
 // init the jack, use program name as JACK client name
 jack.init(argv[0]);
 double samplerate = jack.getSamplerate();
 
-Ring_synth synth(samplerate);
+FM_synth synth(samplerate);
 synth.resetPhase();
-synth.setModFreq(100);
-synth.setCarPitch(60);
-//synth.setRatio(1.7);
-//synth.setModIndex();
+synth.setModFreq(400);
+synth.setCarPitch(50);
+synth.setRatio(4);
+synth.setModIndex();
 
 float amplitude = 0.15;
 
@@ -48,7 +47,7 @@ float amplitude = 0.15;
   int framecount = 0;
   int interval = 10000;
   int newPitch = 0;
-  float pitches[NUMBERPITCHES] = {50,53,55,57,58,60,62,64};
+  float pitches[NUMBERPITCHES] = {30,53,45,57,58,50,62,64};
 
   //assign a function to the JackModule::onProces
   jack.onProcess = [&synth, &amplitude, &framecount, &interval, &newPitch, &pitches]

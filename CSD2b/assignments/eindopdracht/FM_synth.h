@@ -11,10 +11,13 @@ public:
     FM_synth(double samplerate);
     ~FM_synth();
     
-    void initOscCar(std::string type,std::string waveform);
-    void initOscMod(std::string type,std::string waveform);\
-    void setCarPitch(float midiPitch);
+    void resetPhase();
     void setModFreq(double modFreq);
+    float getModFreq();
+    void setCarPitch(float midiPitch);
+    float getCarPitch();
+    void setCarFreq(float midiPitch);
+    float getCarFreq();
     void setModIndex();
     void setRatio(double ratio);
     float calculate() override;
