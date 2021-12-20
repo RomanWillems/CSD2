@@ -8,8 +8,8 @@ Synth::Synth(double samplerate) : sample(0)
 
     // std::cout << midiPitch << std::endl;
     // setMidiPitch(midiPitch);
-
 }
+
 Synth::~Synth() {}
 
 

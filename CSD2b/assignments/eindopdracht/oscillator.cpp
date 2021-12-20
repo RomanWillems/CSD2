@@ -23,22 +23,6 @@ double Oscillator::getSample() {
     return sample;
 }
 
-//iets mis met phase, geeft een heel raar getal
-//frequency klopt niet
-void Oscillator::tick(double frequency) 
-{
-    phase += frequency / samplerate;
-    //wrap
-    if (phase > 1) phase -= 1.0;
-    //let subclasses calculate next sample
-    calculate();
-    //add calculate with virutal
-    std::cout << "frequency = " << frequency << std::endl;
-
-
-}
-
-
 void Oscillator::setFrequency(double frequency) 
 {
     this->frequency = frequency;
@@ -49,3 +33,15 @@ double Oscillator::getFrequency()
     return frequency;
 }
 
+//iets mis met phase, geeft een heel raar getal
+//frequency klopt niet
+void Oscillator::tick(double frequency) 
+{
+    phase += frequency / samplerate;
+    //wrap
+    if (phase > 1) phase -= 1.0;
+    //let subclasses calculate next sample
+    calculate();
+    //add calculate with virutal
+    // std::cout << "frequency = " << frequency << std::endl;
+}

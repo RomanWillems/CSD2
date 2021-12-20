@@ -16,8 +16,7 @@ public:
     void setCarFreq(float midiPitch);
     float getCarFreq();
     void setFrequencys();
-
-    float calculate();
+    float calculate() override;
     
 
 private:

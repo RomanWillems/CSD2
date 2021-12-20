@@ -20,6 +20,7 @@
 int main(int argc,char **argv)
 {
 
+  
 // create a JackModule instance
 JackModule jack;
 // init the jack, use program name as JACK client name
@@ -28,9 +29,8 @@ double samplerate = jack.getSamplerate();
 
 FM_synth synth(samplerate);
 synth.resetPhase();
-synth.setModFreq(400);
-synth.setCarPitch(50);
-synth.setRatio(4);
+synth.setModFreq(100);
+synth.setRatio(1.2);
 synth.setModIndex();
 
 float amplitude = 0.15;
@@ -39,8 +39,7 @@ float amplitude = 0.15;
   WriteToFile fileWriter("output.csv", true);
 
   for(int i = 0; i < SAMPLERATE; i++) {
-    fileWriter.write(std::to_string(synth.getSample()) + "\n");
-    synth.tick();
+    fileWriter.write(std::to_string(synth.calculate()) + "\n");
   }
 #else
 
@@ -54,8 +53,7 @@ float amplitude = 0.15;
     (jack_default_audio_sample_t *inBuf,
       jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
         for(unsigned int i = 0; i < nframes; i++) {
-        outBuf[i] = synth.getSample() * amplitude;
-        synth.tick();
+        outBuf[i] = synth.calculate() * amplitude;
         framecount++;
         if (framecount > interval){
           std::cout << "pitch" << std::endl;

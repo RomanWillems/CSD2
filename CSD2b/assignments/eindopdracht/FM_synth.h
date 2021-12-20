@@ -3,6 +3,7 @@
 #include "sine.h"
 #include "saw.h"
 #include "square.h"
+#include "oscillator.h"
 
 #pragma once
 
@@ -20,6 +21,7 @@ public:
     float getCarFreq();
     void setModIndex();
     void setRatio(double ratio);
+    float getRatio();
     float calculate() override;
 
 private:
