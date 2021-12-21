@@ -58,12 +58,12 @@ int JackModule::init(std::string clientName)
   input_port =
     jack_port_register(client,"input",JACK_DEFAULT_AUDIO_TYPE,JackPortIsInput,0);
 
+
   //Tell the Jack server that the program is ready to start processing audio.
   if(jack_activate(client)) {
     std::cout << "Cannot activate client." << std::endl;
     return -1;
   } // if
-
   return 0;
 } // init()
 
@@ -138,11 +138,18 @@ void JackModule::end()
 /* allows to use a cpp function for the audio callback function */
 int JackModule::_wrap_jack_process_cb(jack_nframes_t nframes,void *arg)
 {
-  // retrieve in and out buffers
-  jack_default_audio_sample_t *inBuf = (jack_default_audio_sample_t *)jack_port_get_buffer(input_port,nframes);
-  jack_default_audio_sample_t *outBuf = (jack_default_audio_sample_t *)jack_port_get_buffer(output_port,nframes);
-  //call the onProcess function, that is assigned to the object
-  return ((JackModule *)arg)->onProcess(inBuf, outBuf, nframes);
+  if(((JackModule *)arg)->onProcess) {
+    // std::cout << "INSIDE - Wrapper " << std::endl;
+    // retrieve in and out buffers
+    jack_default_audio_sample_t *inBuf = (jack_default_audio_sample_t *)jack_port_get_buffer(input_port,nframes);
+    jack_default_audio_sample_t *outBuf = (jack_default_audio_sample_t *)jack_port_get_buffer(output_port,nframes);
+    // std::cout << "inBuf: " << inBuf <<  std::endl;
+    // std::cout << "nframes: " << nframes <<  std::endl;
+
+    //call the onProcess function, that is assigned to the object
+    return ((JackModule *)arg)->onProcess(inBuf, outBuf, nframes);
+  }
+  return -1;
 } // _wrap_jack_process_cb()
 
 

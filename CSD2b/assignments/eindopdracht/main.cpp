@@ -32,7 +32,7 @@ synth.setModFreq(100);
 synth.setRatio(1.2);
 synth.setModIndex(1.2, synth.getCarFreq());
 
-float amplitude = 0.2;
+float amplitude = 0.15;
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
