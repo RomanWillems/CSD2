@@ -19,6 +19,17 @@ static jack_port_t *input_port,*output_port;
 
 JackModule::JackModule()
 {
+  // assign temp onProces function 
+  this->onProcess = [](jack_default_audio_sample_t *inBuf,
+    jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
+
+    // fill output buffer
+    for(unsigned int i = 0; i < nframes; i++) {
+      // write sample to output
+      outBuf[i] = 0;
+    }
+    return 0;
+  };
 } // JackModule()
 
 JackModule::~JackModule()
@@ -85,7 +96,6 @@ void JackModule::autoConnect()
       << "________________________\n\n";
     exit(1);
   }
-
   /*
    * Try auto-connect our output
    *
@@ -138,18 +148,15 @@ void JackModule::end()
 /* allows to use a cpp function for the audio callback function */
 int JackModule::_wrap_jack_process_cb(jack_nframes_t nframes,void *arg)
 {
-  if(((JackModule *)arg)->onProcess) {
-    // std::cout << "INSIDE - Wrapper " << std::endl;
-    // retrieve in and out buffers
-    jack_default_audio_sample_t *inBuf = (jack_default_audio_sample_t *)jack_port_get_buffer(input_port,nframes);
-    jack_default_audio_sample_t *outBuf = (jack_default_audio_sample_t *)jack_port_get_buffer(output_port,nframes);
-    // std::cout << "inBuf: " << inBuf <<  std::endl;
-    // std::cout << "nframes: " << nframes <<  std::endl;
+  // retrieve in and out buffers
+  jack_default_audio_sample_t *inBuf = (jack_default_audio_sample_t *)jack_port_get_buffer(input_port,nframes);
+  jack_default_audio_sample_t *outBuf = (jack_default_audio_sample_t *)jack_port_get_buffer(output_port,nframes);
+  // std::cout << "inBuf: " << inBuf <<  std::endl;
+  // std::cout << "nframes: " << nframes <<  std::endl;
 
-    //call the onProcess function, that is assigned to the object
-    return ((JackModule *)arg)->onProcess(inBuf, outBuf, nframes);
-  }
-  return -1;
+  //call the onProcess function, that is assigned to the object
+  return ((JackModule *)arg)->onProcess(inBuf, outBuf, nframes);
+
 } // _wrap_jack_process_cb()
 
 

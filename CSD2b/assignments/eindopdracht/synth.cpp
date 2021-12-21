@@ -4,7 +4,6 @@
 
 Synth::Synth(double samplerate) : sample(0) 
 {
-    this->samplerate = samplerate;
 
     // std::cout << midiPitch << std::endl;
     // setMidiPitch(midiPitch);

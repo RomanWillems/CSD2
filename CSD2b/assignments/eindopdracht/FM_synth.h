@@ -4,6 +4,7 @@
 #include "saw.h"
 #include "square.h"
 #include "oscillator.h"
+#include "ui.h"
 
 #pragma once
 
@@ -15,6 +16,8 @@ public:
     void resetPhase();
     void setModFreq(double modFreq);
     float getModFreq();
+    void setCarWaveForm(std::string waveType, double samplerate);
+    void setModWaveForm(std::string waveType, double samplerate);
     void setCarPitch(float midiPitch);
     float getCarPitch();
     void setCarFreq(float freq);

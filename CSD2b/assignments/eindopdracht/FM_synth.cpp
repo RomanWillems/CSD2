@@ -2,12 +2,11 @@
 #include "FM_synth.h"
 #include "math.h"
 #define SAMPLERATE 44100
+#include "ui.h"
 
 
-FM_synth::FM_synth(double samplerate) : Synth(samplerate), modDepth(20)
+FM_synth::FM_synth(double samplerate) : Synth(samplerate)
 {
-    carrier = new Sine(samplerate);
-    modulator = new Sine(samplerate);
 }
 
 FM_synth::~FM_synth()
@@ -23,6 +22,29 @@ void FM_synth::resetPhase()
 {
   carrier->resetPhase();
   modulator->resetPhase();
+}
+
+//set the waveform
+void FM_synth::setCarWaveForm(std::string waveType, double samplerate)
+{
+  if(waveType == "sine") {
+     carrier = new Sine(samplerate);
+  } else if(waveType == "saw") {
+     carrier = new Saw(samplerate);
+  } else if (waveType == "square") { 
+    modulator = new Square(samplerate);
+  }
+}
+
+void FM_synth::setModWaveForm(std::string waveType, double samplerate)
+{
+  if(waveType == "sine") {
+     modulator = new Sine(samplerate);
+  } else if(waveType == "saw") {
+     modulator = new Saw(samplerate);
+  } else if (waveType == "square") { 
+    modulator = new Square(samplerate);
+  }
 }
 
 // set frequency's
