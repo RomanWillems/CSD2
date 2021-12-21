@@ -30,8 +30,8 @@ FM_synth synth(samplerate);
 synth.resetPhase();
 synth.setModFreq(100);
 synth.setRatio(1.2);
-synth.setModIndex(1.2, synth.getCarFreq());
-
+synth.setModDepth(100);
+synth.setCarPitch(60);
 float amplitude = 0.15;
 
 #if WRITE_TO_FILE

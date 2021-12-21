@@ -11,15 +11,15 @@ class FM_synth : public Synth {
 public:
     FM_synth(double samplerate);
     ~FM_synth();
-    
+
     void resetPhase();
     void setModFreq(double modFreq);
     float getModFreq();
     void setCarPitch(float midiPitch);
     float getCarPitch();
-    void setCarFreq(float midiPitch);
+    void setCarFreq(float freq);
     float getCarFreq();
-    void setModIndex(double ratio, float carFreq);
+    void setModDepth(double modDepth);
     void setRatio(double ratio);
     float getRatio();
     float calculate() override;
@@ -29,6 +29,6 @@ private:
     Oscillator* modulator;
     double carFreq;
     double modFreq;
-    double modIndex;
+    double modDepth;
     double ratio;
 };
