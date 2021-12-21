@@ -14,14 +14,14 @@ public:
     //return current sample
     double getSample();
     //go to next sample
-    void tick(double frequency);
+    void tick();
 
     //getters and setters
     void setFrequency(double frequency);
     double getFrequency();
     void resetPhase();
 
-    
+
 protected:
     virtual void calculate() = 0;
     double frequency;

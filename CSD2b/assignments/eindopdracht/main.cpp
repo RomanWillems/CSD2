@@ -11,7 +11,7 @@
 #include "FM_synth.h"
 #include "Ring_synth.h"
 
-#define WRITE_TO_FILE 1
+#define WRITE_TO_FILE 0
 #define SAMPLERATE 44100
 #define NUMBERPITCHES 8
 
