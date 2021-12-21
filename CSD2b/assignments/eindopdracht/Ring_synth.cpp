@@ -4,30 +4,30 @@
 #define SAMPLERATE 44100
 
 
-Ring_synth::Ring_synth(double samplerate) 
+Ring_synth::Ring_synth(double samplerate)
     : Synth(samplerate)
 {
     carrier = new Sine(samplerate);
     modulator = new Sine(samplerate);
 }
 
-Ring_synth::~Ring_synth() 
+Ring_synth::~Ring_synth()
 {
     delete carrier;
     carrier = nullptr;
-    
+
     delete modulator;
     modulator = nullptr;
 }
 
-void Ring_synth::resetPhase() 
+void Ring_synth::resetPhase()
 {
     carrier->resetPhase();
     modulator->resetPhase();
 }
 
 // set frequency's
-void Ring_synth::setModFreq(double modFreq) 
+void Ring_synth::setModFreq(double modFreq)
 {
     this->modFreq = modFreq;
     std::cout << "modFreq" << modFreq << std::endl;
@@ -39,22 +39,22 @@ float Ring_synth::getModFreq()
     return modFreq;
 }
 
-void Ring_synth::setCarPitch(float midiPitch) 
+void Ring_synth::setCarPitch(float midiPitch)
 {
     this->midiPitch = midiPitch;
     setCarFreq(midiPitch);
 }
 
-float Ring_synth::getCarPitch() 
-{   
+float Ring_synth::getCarPitch()
+{
     return midiPitch;
-    
+
 }
 
 void Ring_synth::setCarFreq(float midiPitch)
 {
-    this->carFreq = mtof(midiPitch);   
-    
+    this->carFreq = mtof(midiPitch);
+
 }
 
 float Ring_synth::getCarFreq()
@@ -64,10 +64,9 @@ float Ring_synth::getCarFreq()
 
 float Ring_synth::calculate() {
 
-    carrier->tick(carFreq);
-    modulator->tick(modFreq);
+    carrier->tick();
+    modulator->tick();
     sample = (carrier->getSample() * modulator->getSample());
     return sample;
 
 }
-
