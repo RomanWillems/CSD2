@@ -4,11 +4,8 @@
 #define SAMPLERATE 44100
 
 
-Ring_synth::Ring_synth(double samplerate)
-    : Synth(samplerate)
+Ring_synth::Ring_synth() : Synth()
 {
-    carrier = new Sine(samplerate);
-    modulator = new Sine(samplerate);
 }
 
 Ring_synth::~Ring_synth()
@@ -24,6 +21,30 @@ void Ring_synth::resetPhase()
 {
     carrier->resetPhase();
     modulator->resetPhase();
+}
+
+
+//set the waveform
+void Ring_synth::setCarWaveForm(std::string waveType, double samplerate)
+{
+  if(waveType == "sine") {
+     carrier = new Sine(samplerate);
+  } else if(waveType == "saw") {
+     carrier = new Saw(samplerate);
+  } else if (waveType == "square") { 
+    modulator = new Square(samplerate);
+  }
+}
+
+void Ring_synth::setModWaveForm(std::string waveType, double samplerate)
+{
+  if(waveType == "sine") {
+     modulator = new Sine(samplerate);
+  } else if(waveType == "saw") {
+     modulator = new Saw(samplerate);
+  } else if (waveType == "square") { 
+    modulator = new Square(samplerate);
+  }
 }
 
 // set frequency's
@@ -42,7 +63,7 @@ float Ring_synth::getModFreq()
 void Ring_synth::setCarPitch(float midiPitch)
 {
     this->midiPitch = midiPitch;
-    setCarFreq(midiPitch);
+    setCarFreq(mtof(midiPitch));
 }
 
 float Ring_synth::getCarPitch()
@@ -51,9 +72,10 @@ float Ring_synth::getCarPitch()
 
 }
 
-void Ring_synth::setCarFreq(float midiPitch)
+void Ring_synth::setCarFreq(float freq)
 {
-    this->carFreq = mtof(midiPitch);
+    carFreq = freq;
+    carrier->setFrequency(carFreq);
 
 }
 

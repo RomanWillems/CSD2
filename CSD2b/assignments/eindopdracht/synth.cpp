@@ -2,7 +2,7 @@
 #include "synth.h"
 #include "math.h"
 
-Synth::Synth(double samplerate) : sample(0) 
+Synth::Synth() : sample(0) 
 {
 
     // std::cout << midiPitch << std::endl;

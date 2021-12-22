@@ -11,9 +11,7 @@ Saw::~Saw() {}
 
 //calculate the saw wave
 void Saw::calculate() {
+
     sample = phase * 2.0 - 1.0;
-
-    //TODO move to baseclass
     sample *= amplitude; 
-
 }

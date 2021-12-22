@@ -10,7 +10,7 @@
 
 class FM_synth : public Synth {
 public:
-    FM_synth(double samplerate);
+    FM_synth();
     ~FM_synth();
 
     void resetPhase();

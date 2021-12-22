@@ -9,9 +9,8 @@ Sine::Sine(double samplerate)
 Sine::~Sine() {}
 
 void Sine::calculate(){
-    sample = sin(M_PI * 2 * phase) * amplitude;
-    //TODO move to baseclass
-    sample *= amplitude;
+
+    sample = sin(M_PI * 2 * phase);
 
 }
 

@@ -9,7 +9,7 @@
 class Synth
 {
 public:
-    Synth(double samplerate);
+    Synth();
     virtual ~Synth();
 
     //go to next sample
@@ -20,16 +20,15 @@ public:
     void setMidiPitch(float pitch);
     void getMidiPitch();
 
+    virtual float calculate() = 0;
+
 protected:
     float midiPitch;
     double samplerate;
     //returns a frequency
     double mtof(float pitch);
     double sample;
- 
 
-private:
-    virtual float calculate() = 0;
 
 };
 

@@ -5,7 +5,7 @@
 #include "ui.h"
 
 
-FM_synth::FM_synth(double samplerate) : Synth(samplerate)
+FM_synth::FM_synth() : Synth()
 {
 }
 

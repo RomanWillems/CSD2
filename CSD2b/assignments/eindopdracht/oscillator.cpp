@@ -2,14 +2,14 @@
 #include "math.h"
 
 //constructor
-Oscillator::Oscillator(double samplerate) :
+Oscillator::Oscillator(double samplerate) : 
     samplerate(samplerate), sample(0), phase(0), amplitude(1.0)
-{
+{ 
 }
 
 Oscillator::~Oscillator() {}
 
-void Oscillator::resetPhase()
+void Oscillator::resetPhase() 
 {
     phase = 0;
 }
@@ -23,7 +23,7 @@ double Oscillator::getSample() {
     return sample;
 }
 
-void Oscillator::setFrequency(double frequency)
+void Oscillator::setFrequency(double frequency) 
 {
     this->frequency = frequency;
 }
@@ -35,7 +35,7 @@ double Oscillator::getFrequency()
 
 //iets mis met phase, geeft een heel raar getal
 //frequency klopt niet
-void Oscillator::tick()
+void Oscillator::tick() 
 {
     phase += getFrequency() / samplerate;
     //wrap

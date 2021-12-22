@@ -18,6 +18,6 @@ void Square::calculate(){
         sample = -1.0;
     }
     //TODO - put in baseclass
-    sample += amplitude;
+    sample *= amplitude;
 }
 
