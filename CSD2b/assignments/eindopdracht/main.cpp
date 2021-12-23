@@ -17,20 +17,6 @@
 #define SAMPLERATE 44100
 #define NUMBERPITCHES 8
 
-//start jack audio
-//jackd -d coreaudio
-
-
-// std::string chooseSynth(){
-
-//   UserInput selectSynth;
-//   std::cout << "Chose your kind of modulation! (your synth).\n";
-//   std::string synthOptions[2] = {"fm", "ring"};
-//   int synthNumOptions = 3;
-//   std::string synthSelection = selectSynth.retrieveUserSelection(synthOptions, synthNumOptions);
-//   return synthSelection;
-// }
-
 
 int main(int argc,char **argv)
 {
@@ -42,18 +28,34 @@ double samplerate = jack.getSamplerate();
 
 
 
-// FM_synth fmSynth;
-// Ring_synth ringSynth;
-// Synth* synth = nullptr;
-// synth = &fmSynth;
 
-// std::string synthChoise = chooseSynth();
+UserInput selectSynth;
+std::cout << "Chose your kind of modulation! (your synth).\n";
+std::string synthOptions[2] = {"fm", "ring"};
+int synthNumOptions = 3;
+std::string synthSelection = selectSynth.retrieveUserSelection(synthOptions, synthNumOptions);
 
-// if(synthChoise == "fm") {
-//     synth = &fmSynth;
-//   } else if(synthChoise == "ring") { 
-//     synth = &ringSynth;
-//   }
+
+FM_synth fmSynth;
+Ring_synth ringSynth;
+Synth* synth = nullptr;
+
+int synthChoise;
+if (synthSelection == "fm") {
+  synthChoise = 1;
+} else if (synthSelection == "ring") {
+  synthChoise = 2;
+}
+
+switch(synthChoise) {
+  case 1:
+    synth = &fmSynth;
+    break;
+  case 2:
+    synth = &ringSynth;
+    break;
+}
+
 
 //call UI class
 UserInput UserInput;
@@ -75,18 +77,12 @@ int modFreq = UserInput.retrieveValueRange(0, 10000);
 
 
 //set fm synth params
-FM_synth synth;
-synth.setCarWaveForm(CarWaveTypeSelection,samplerate);
-synth.setModWaveForm(ModWaveTypeSelection,samplerate);
-synth.resetPhase();
-synth.setModFreq(modFreq);
-synth.setModDepth(50);
+synth->setCarWaveForm(CarWaveTypeSelection,samplerate);
+synth->setModWaveForm(ModWaveTypeSelection,samplerate);
+synth->resetPhase();
+synth->setModFreq(modFreq);
+synth->setModDepth(50);
 
-// //set ring synth params
-// synth->setCarWaveForm(CarWaveTypeSelection,samplerate);
-// synth->setModWaveForm(ModWaveTypeSelection,samplerate);
-// synth->resetPhase();
-// synth->setModFreq(modFreq);
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
@@ -96,7 +92,7 @@ synth.setModDepth(50);
   }
 #else
 
-  float amplitude = 0.15;
+  float amplitude = 0.1;
   int framecount = 0;
   int interval = 44100;
   int newPitch = 0;
@@ -111,10 +107,9 @@ synth.setModDepth(50);
     (jack_default_audio_sample_t *inBuf,
       jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
         for(unsigned int i = 0; i < nframes; i++) {
-        outBuf[i] = synth.calculate() * amplitude;
+        outBuf[i] = synth->calculate() * amplitude;
         framecount++;
         if (framecount > interval){
-          std::cout << "pitch" << std::endl;
           length++;
           if(length >= 8) {
             length = 0;
@@ -124,14 +119,14 @@ synth.setModDepth(50);
           if (newPitch >= 8){
             newPitch = 0; 
               }
-          synth.setCarPitch(melody.getMidiList(newPitch));
+          synth->setCarPitch(melody.getMidiList(newPitch));
           framecount = 0;
 
           std::cout << "pitch = " << melody.getMidiList(newPitch) << std::endl;
          }
         }
 
-      amplitude =  0.5;
+      amplitude =  0.3;
     return 0;
   };
   

@@ -53,7 +53,6 @@ void FM_synth::setModFreq(double modFreq)
   this->modFreq = modFreq;
   modulator->setFrequency(modFreq);
 
-  // std::cout << "modFreq =" << modFreq << std::endl;
 }
 
 float FM_synth::getModFreq()

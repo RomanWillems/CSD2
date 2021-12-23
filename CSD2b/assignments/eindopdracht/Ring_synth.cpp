@@ -32,7 +32,7 @@ void Ring_synth::setCarWaveForm(std::string waveType, double samplerate)
   } else if(waveType == "saw") {
      carrier = new Saw(samplerate);
   } else if (waveType == "square") { 
-    modulator = new Square(samplerate);
+     carrier = new Square(samplerate);
   }
 }
 
@@ -51,7 +51,8 @@ void Ring_synth::setModWaveForm(std::string waveType, double samplerate)
 void Ring_synth::setModFreq(double modFreq)
 {
     this->modFreq = modFreq;
-    std::cout << "modFreq" << modFreq << std::endl;
+    modulator->setFrequency(modFreq);
+
 
 }
 
