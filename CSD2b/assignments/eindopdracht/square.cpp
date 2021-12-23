@@ -2,14 +2,13 @@
 #include "math.h"
 
 //constructors square
-Square::Square(double samplerate) 
-    : Oscillator(samplerate)
+Square::Square(double samplerate) : Oscillator(samplerate)
 {}
 
-//destructor sine
+//destructor square
 Square::~Square() {}
 
-//calculate the square wave
+//calculate the next sample according to square calculation
 void Square::calculate(){
 
     if(phase < 0.5) {
@@ -17,7 +16,6 @@ void Square::calculate(){
     } else {
         sample = -1.0;
     }
-    //TODO - put in baseclass
-    sample *= amplitude;
+  sample *= amplitude;
 }
 

@@ -9,6 +9,7 @@ public:
 
     //  if user selection is in array, return input
     std::string retrieveUserSelection(std::string selectionOptions[], int numOptions);
+    
     // if user selectin is not in input: say "wrong input"
     bool validateSelection(std::string selection, std::string selectionOptions[], int NumOptions);
 

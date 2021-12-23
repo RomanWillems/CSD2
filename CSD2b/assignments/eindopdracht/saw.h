@@ -10,13 +10,9 @@ public:
     Saw(double samplerate);
     ~Saw();
 
-
 private:
-    //calculate the next sample according to saw calculation
     // override base class virtual function.
     void calculate() override;
-   
-
 };
 
 #endif

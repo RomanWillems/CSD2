@@ -4,6 +4,8 @@ UserInput::UserInput() {}
 
 UserInput::~UserInput() {}
 
+
+//validation user selection
 bool UserInput::validateSelection(std::string selection, 
     std::string selectionOptions[], int numOptions)
 {
@@ -17,6 +19,7 @@ bool UserInput::validateSelection(std::string selection,
     return false;
 }
 
+//get the user input
 std::string UserInput::retrieveUserInput(std::string selectionOptions[], 
     int numOptions)
 {
@@ -33,6 +36,7 @@ std::string UserInput::retrieveUserInput(std::string selectionOptions[],
     return selection;
 }
 
+//the class to get the user selection back
 std::string UserInput::retrieveUserSelection(std::string selectionOptions[], int numOptions) 
 {
     bool noCorrectSelection = true;
@@ -50,6 +54,7 @@ std::string UserInput::retrieveUserSelection(std::string selectionOptions[], int
     return userSelection;
 }
 
+//number selection
 float UserInput::retrieveValueRange(float min, float max)
 {
     std::string input;

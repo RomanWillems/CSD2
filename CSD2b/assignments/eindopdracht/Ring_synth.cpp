@@ -84,6 +84,8 @@ float Ring_synth::getCarFreq()
     return carFreq;
 }
 
+
+//calculate the modulated sample according to ring modulation and give it back
 float Ring_synth::calculate() {
 
     carrier->tick();

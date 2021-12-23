@@ -32,7 +32,7 @@ void FM_synth::setCarWaveForm(std::string waveType, double samplerate)
   } else if(waveType == "saw") {
      carrier = new Saw(samplerate);
   } else if (waveType == "square") { 
-    modulator = new Square(samplerate);
+     carrier = new Square(samplerate);
   }
 }
 
@@ -43,7 +43,7 @@ void FM_synth::setModWaveForm(std::string waveType, double samplerate)
   } else if(waveType == "saw") {
      modulator = new Saw(samplerate);
   } else if (waveType == "square") { 
-    modulator = new Square(samplerate);
+     modulator = new Square(samplerate);
   }
 }
 
@@ -85,23 +85,13 @@ float FM_synth::getCarFreq()
   return carFreq;
 }
 
-//set FM parameters
-void FM_synth::setRatio(double ratio)
-{
-  this->ratio = ratio;
-}
-
-float FM_synth::getRatio()
-{
-  return ratio;
-}
-
+//set mod Depth (give in main)
 void FM_synth::setModDepth(double modDepth)
 {
   this->modDepth = modDepth;
 }
 
-//calculate the new sample
+//calculate the modulated sample according to FM and give it back
 float FM_synth::calculate()
 {
   modulator->tick();

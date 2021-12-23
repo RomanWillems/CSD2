@@ -19,10 +19,6 @@ void Oscillator::initialize(double samplerate) {
      this->samplerate = samplerate;
 }
 
-double Oscillator::getSample() {
-    return sample;
-}
-
 void Oscillator::setFrequency(double frequency) 
 {
     this->frequency = frequency;
@@ -44,4 +40,8 @@ void Oscillator::tick()
     calculate();
     //add calculate with virutal
     // std::cout << "frequency = " << frequency << std::endl;
+}
+
+double Oscillator::getSample() {
+    return sample;
 }

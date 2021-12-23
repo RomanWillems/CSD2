@@ -63,8 +63,6 @@ std::string CarWaveFormOptions[3] = {"sine", "saw", "square"};
 int CarNumWaveFormOptions = 3;
 std::string CarWaveTypeSelection = UserInput.retrieveUserSelection(CarWaveFormOptions, CarNumWaveFormOptions);
 
-//TODO MELODY
-
 //select modulator wave form
 std::cout << "Choose modulator waveform.\n";
 std::string ModWaveFormOptions[3] = {"sine", "saw", "square"};
@@ -82,7 +80,6 @@ synth.setCarWaveForm(CarWaveTypeSelection,samplerate);
 synth.setModWaveForm(ModWaveTypeSelection,samplerate);
 synth.resetPhase();
 synth.setModFreq(modFreq);
-synth.setRatio(1.2);
 synth.setModDepth(50);
 
 // //set ring synth params

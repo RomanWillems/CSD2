@@ -26,7 +26,7 @@ void Melody::setNoteLength()
     srand(time(NULL));
     for (int i = 0; i < noteLengthAmount; i++)
     {
-        int rnd = rand() % 20 * 1048;
+        int rnd = rand() % 50 * 512;
         noteLength[i] = rnd;
         std::cout << "Notes" << Notes[i] << std::endl;
     }

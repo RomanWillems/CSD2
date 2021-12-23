@@ -23,8 +23,6 @@ public:
     void setCarFreq(float freq);
     float getCarFreq();
     void setModDepth(double modDepth);
-    void setRatio(double ratio);
-    float getRatio();
     float calculate() override;
 
 private:
@@ -33,5 +31,4 @@ private:
     double carFreq;
     double modFreq;
     double modDepth;
-    double ratio;
 };
