@@ -104,7 +104,6 @@ void FM_synth::setModDepth(double modDepth)
 //calculate the new sample
 float FM_synth::calculate()
 {
-
   modulator->tick();
   carrier->setFrequency((modulator->getSample() * modDepth + carFreq));
   carrier->tick();

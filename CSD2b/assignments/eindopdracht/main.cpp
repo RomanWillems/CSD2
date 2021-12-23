@@ -11,6 +11,7 @@
 #include "FM_synth.h"
 #include "Ring_synth.h"
 #include "ui.h"
+#include "melody.h"
 
 #define WRITE_TO_FILE 0
 #define SAMPLERATE 44100
@@ -20,15 +21,15 @@
 //jackd -d coreaudio
 
 
-std::string chooseSynth(Synth* &synth,Synth* fmSynth,Synth* ringSynth){
+// std::string chooseSynth(){
 
-  UserInput selectSynth;
-  std::cout << "Chose your kind of modulation! (your synth).\n";
-  std::string synthOptions[2] = {"fm", "ring"};
-  int synthNumOptions = 3;
-  std::string synthSelection = selectSynth.retrieveUserSelection(synthOptions, synthNumOptions);
-  return synthSelection;
-}
+//   UserInput selectSynth;
+//   std::cout << "Chose your kind of modulation! (your synth).\n";
+//   std::string synthOptions[2] = {"fm", "ring"};
+//   int synthNumOptions = 3;
+//   std::string synthSelection = selectSynth.retrieveUserSelection(synthOptions, synthNumOptions);
+//   return synthSelection;
+// }
 
 
 int main(int argc,char **argv)
@@ -41,17 +42,18 @@ double samplerate = jack.getSamplerate();
 
 
 
-Synth* synth = nullptr;
-FM_synth fmSynth;
-Ring_synth ringSynth;
+// FM_synth fmSynth;
+// Ring_synth ringSynth;
+// Synth* synth = nullptr;
+// synth = &fmSynth;
 
-std::string synthChoise = chooseSynth(synth,&fmSynth,&ringSynth);
+// std::string synthChoise = chooseSynth();
 
-if(synthChoise == "fm") {
-    FM_synth &fmsynth();
-  } else if(synthChoise == "ring") {
-    Ring_synth &synth();
-  }
+// if(synthChoise == "fm") {
+//     synth = &fmSynth;
+//   } else if(synthChoise == "ring") { 
+//     synth = &ringSynth;
+//   }
 
 //call UI class
 UserInput UserInput;
@@ -75,24 +77,19 @@ int modFreq = UserInput.retrieveValueRange(0, 10000);
 
 
 //set fm synth params
-fmSynth.setCarWaveForm(CarWaveTypeSelection,samplerate);
-fmSynth.setModWaveForm(ModWaveTypeSelection,samplerate);
-fmSynth.resetPhase();
-fmSynth.setModFreq(modFreq);
-fmSynth.setRatio(1.2);
-fmSynth.setModDepth(50);
+FM_synth synth;
+synth.setCarWaveForm(CarWaveTypeSelection,samplerate);
+synth.setModWaveForm(ModWaveTypeSelection,samplerate);
+synth.resetPhase();
+synth.setModFreq(modFreq);
+synth.setRatio(1.2);
+synth.setModDepth(50);
 
-
-//set ring synth params
-ringSynth.setCarWaveForm(CarWaveTypeSelection,samplerate);
-ringSynth.setModWaveForm(ModWaveTypeSelection,samplerate);
-ringSynth.resetPhase();
-ringSynth.setModFreq(modFreq);
-
-
-
-
-float amplitude = 0.15;
+// //set ring synth params
+// synth->setCarWaveForm(CarWaveTypeSelection,samplerate);
+// synth->setModWaveForm(ModWaveTypeSelection,samplerate);
+// synth->resetPhase();
+// synth->setModFreq(modFreq);
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
@@ -102,29 +99,38 @@ float amplitude = 0.15;
   }
 #else
 
+  float amplitude = 0.15;
   int framecount = 0;
-  int interval = 10000;
+  int interval = 44100;
   int newPitch = 0;
-  float pitches[NUMBERPITCHES] = {30,53,45,57,58,50,62,64};
+  int length = 0;
+
+  Melody melody;
+  melody.nextNote();
+  melody.setNoteLength();
 
   //assign a function to the JackModule::onProces
-  jack.onProcess = [&synth, &amplitude, &framecount, &interval, &newPitch, &pitches]
+  jack.onProcess = [&synth, &amplitude, &framecount, &interval, &newPitch, &melody, &length]
     (jack_default_audio_sample_t *inBuf,
       jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
         for(unsigned int i = 0; i < nframes; i++) {
-        outBuf[i] = synth->calculate() * amplitude;
+        outBuf[i] = synth.calculate() * amplitude;
         framecount++;
         if (framecount > interval){
           std::cout << "pitch" << std::endl;
-          framecount = 0;
+          length++;
+          if(length >= 8) {
+            length = 0;
+          }
+          interval = (melody.getNoteLength(length));
           newPitch++;
-          if (newPitch >= NUMBERPITCHES){
+          if (newPitch >= 8){
             newPitch = 0; 
               }
-          float pitch = pitches[newPitch]; 
-          synth->setMidiPitch(pitch);
+          synth.setCarPitch(melody.getMidiList(newPitch));
+          framecount = 0;
 
-          std::cout << pitch << std::endl;
+          std::cout << "pitch = " << melody.getMidiList(newPitch) << std::endl;
          }
         }
 
