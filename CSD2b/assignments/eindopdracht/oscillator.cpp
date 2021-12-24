@@ -1,24 +1,29 @@
 #include "oscillator.h"
 #include "math.h"
 
-//constructor
+//create the oscillator constructor and destructor
+//--------------------------------------------------------------------------------------------//
+
 Oscillator::Oscillator(double samplerate) : 
-    samplerate(samplerate), sample(0), phase(0), amplitude(1.0)
-{ 
-}
+    samplerate(samplerate), sample(0), phase(0), amplitude(1.0) {}
 
 Oscillator::~Oscillator() {}
 
+//reset Phase
+//--------------------------------------------------------------------------------------------//
 void Oscillator::resetPhase() 
 {
     phase = 0;
 }
 
-
+//initialize samplerate
+//--------------------------------------------------------------------------------------------//
 void Oscillator::initialize(double samplerate) {
      this->samplerate = samplerate;
 }
 
+//set and get frequency
+//--------------------------------------------------------------------------------------------//
 void Oscillator::setFrequency(double frequency) 
 {
     this->frequency = frequency;
@@ -29,8 +34,9 @@ double Oscillator::getFrequency()
     return frequency;
 }
 
-//iets mis met phase, geeft een heel raar getal
-//frequency klopt niet
+//calculate the phase, then calculate the sample with an virtual calculate from the waveform classes.
+//And return it
+//--------------------------------------------------------------------------------------------//
 void Oscillator::tick() 
 {
     phase += getFrequency() / samplerate;

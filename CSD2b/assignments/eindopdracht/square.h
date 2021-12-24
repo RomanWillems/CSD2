@@ -4,6 +4,8 @@
 #include "oscillator.h"
 
 
+//create a square class with al the functions needed
+//--------------------------------------------------------------------------------------------//
 class Square : public Oscillator
 {
 public:
@@ -11,13 +13,10 @@ public:
     Square(double samplerate);
     ~Square();
 
-
-
 private:
-    //calculate the next sample according to square calculation
     // override base class virtual function.
     void calculate() override;
-
 };
+//--------------------------------------------------------------------------------------------//
 
 #endif

@@ -6,9 +6,11 @@
 #include "square.h"
 
 
-class Synth
-{
+//create a synth class with all the needed functions
+//--------------------------------------------------------------------------------------------//
+class Synth {
 public:
+    //constructor, destructor
     Synth();
     virtual ~Synth();
 
@@ -19,7 +21,9 @@ public:
     double getSample();
     void setMidiPitch(float pitch);
     void getMidiPitch();
+    virtual void setCarPitch(float midiPitch) = 0;
 
+    //get calculate from synth subclasses
     virtual float calculate() = 0;
 
 protected:
@@ -28,8 +32,6 @@ protected:
     //returns a frequency
     double mtof(float pitch);
     double sample;
-
-
 };
-
+//--------------------------------------------------------------------------------------------//
 #endif

@@ -1,11 +1,14 @@
 #include "ui.h"
 
+//User input constructor and destructor
+//--------------------------------------------------------------------------------------------//
 UserInput::UserInput() {}
 
 UserInput::~UserInput() {}
 
 
 //validation user selection
+//--------------------------------------------------------------------------------------------//
 bool UserInput::validateSelection(std::string selection, 
     std::string selectionOptions[], int numOptions)
 {
@@ -20,13 +23,14 @@ bool UserInput::validateSelection(std::string selection,
 }
 
 //get the user input
+//--------------------------------------------------------------------------------------------//
 std::string UserInput::retrieveUserInput(std::string selectionOptions[], 
     int numOptions)
 {
     //show user all the options
     std::cout << "Please choose between: ";
     for(int i = 0; i < numOptions - 1; i++) {
-        std::cout << selectionOptions[i] << ", '";
+        std::cout << selectionOptions[i] << ", ";
     }
     //print last options
     std::cout << selectionOptions[numOptions - 1] << "." << std::endl;
@@ -37,6 +41,7 @@ std::string UserInput::retrieveUserInput(std::string selectionOptions[],
 }
 
 //the class to get the user selection back
+//--------------------------------------------------------------------------------------------//
 std::string UserInput::retrieveUserSelection(std::string selectionOptions[], int numOptions) 
 {
     bool noCorrectSelection = true;
@@ -55,6 +60,7 @@ std::string UserInput::retrieveUserSelection(std::string selectionOptions[], int
 }
 
 //number selection
+//--------------------------------------------------------------------------------------------//
 float UserInput::retrieveValueRange(float min, float max)
 {
     std::string input;
@@ -75,7 +81,7 @@ float UserInput::retrieveValueRange(float min, float max)
             } else {
                 std::cout << "out of range please try again" << std::endl;
             }
-        } catch (const std::exception* e) {
+        } catch (const std::exception& e) {
             //no float as input
             std::cout << "Not a number, please try again" << std::endl;
         }

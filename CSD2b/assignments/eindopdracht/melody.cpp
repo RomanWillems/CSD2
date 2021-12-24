@@ -1,16 +1,21 @@
 #include "melody.h"
 
-Melody::Melody() : UserInput() {}
+
+//melody constructor and destructor
+//--------------------------------------------------------------------------------------------//
+Melody::Melody() {}
 
 Melody::~Melody() {}
 
+//midi note generator
+//--------------------------------------------------------------------------------------------//
 void Melody::nextNote()
 {
-    //generate random numbers
+    //generate random pitches
     srand(time(NULL));
     for (int i = 0; i < noteAmount; i++)
     {
-        int rnd = rand() % 40 + 30;
+        int rnd = rand() % 40 + 35;
         Notes[i] = rnd;
         std::cout << "Notes" << Notes[i] << std::endl;
     }
@@ -21,6 +26,8 @@ float Melody::getMidiList(int count)
     return Notes[count];
 }
 
+//midi note length generator
+//--------------------------------------------------------------------------------------------//
 void Melody::setNoteLength()
 {
     srand(time(NULL));

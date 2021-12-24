@@ -4,12 +4,14 @@
 #define SAMPLERATE 44100
 
 
-Ring_synth::Ring_synth() : Synth()
-{
-}
+//Ring synth constructor and destructor
+//--------------------------------------------------------------------------------------------//
+
+Ring_synth::Ring_synth() : Synth() {}
 
 Ring_synth::~Ring_synth()
 {
+    //delete the oscillators when done and reset to nullptr
     delete carrier;
     carrier = nullptr;
 
@@ -17,6 +19,8 @@ Ring_synth::~Ring_synth()
     modulator = nullptr;
 }
 
+//Reset the phase
+//--------------------------------------------------------------------------------------------//
 void Ring_synth::resetPhase()
 {
     carrier->resetPhase();
@@ -24,7 +28,8 @@ void Ring_synth::resetPhase()
 }
 
 
-//set the waveform
+//set the waveform's
+//--------------------------------------------------------------------------------------------//
 void Ring_synth::setCarWaveForm(std::string waveType, double samplerate)
 {
   if(waveType == "sine") {
@@ -48,6 +53,7 @@ void Ring_synth::setModWaveForm(std::string waveType, double samplerate)
 }
 
 // set frequency's
+//--------------------------------------------------------------------------------------------//
 void Ring_synth::setModFreq(double modFreq)
 {
     this->modFreq = modFreq;
@@ -87,6 +93,7 @@ float Ring_synth::getCarFreq()
 
 
 //calculate the modulated sample according to ring modulation and give it back
+//--------------------------------------------------------------------------------------------//
 float Ring_synth::calculate() {
 
     carrier->tick();

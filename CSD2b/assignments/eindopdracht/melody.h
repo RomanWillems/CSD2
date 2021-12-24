@@ -4,12 +4,17 @@
 
 #pragma once
 
-class Melody : public UserInput{
-public:
 
+//create melody class with the according functions
+//--------------------------------------------------------------------------------------------//
+class Melody {
+public:
+    
+    //constructor, destructor
     Melody();
     ~Melody();
 
+    //getters and setters
     void nextNote();
     float getMidiList(int count);
     void setNoteLength();
@@ -26,3 +31,4 @@ protected:
     int noteLengthAmount = 8;
 
 };
+//--------------------------------------------------------------------------------------------//

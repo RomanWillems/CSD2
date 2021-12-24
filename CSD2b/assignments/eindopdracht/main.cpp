@@ -14,8 +14,6 @@
 #include "melody.h"
 
 #define WRITE_TO_FILE 0
-#define SAMPLERATE 44100
-#define NUMBERPITCHES 8
 
 
 int main(int argc,char **argv)
@@ -26,78 +24,79 @@ JackModule jack;
 jack.init(argv[0]);
 double samplerate = jack.getSamplerate();
 
-
-
-
-UserInput selectSynth;
-std::cout << "Chose your kind of modulation! (your synth).\n";
-std::string synthOptions[2] = {"fm", "ring"};
-int synthNumOptions = 3;
-std::string synthSelection = selectSynth.retrieveUserSelection(synthOptions, synthNumOptions);
-
-
-FM_synth fmSynth;
-Ring_synth ringSynth;
-Synth* synth = nullptr;
-
-int synthChoise;
-if (synthSelection == "fm") {
-  synthChoise = 1;
-} else if (synthSelection == "ring") {
-  synthChoise = 2;
-}
-
-switch(synthChoise) {
-  case 1:
-    synth = &fmSynth;
-    break;
-  case 2:
-    synth = &ringSynth;
-    break;
-}
-
-
+//UI:
+//--------------------------------------------------------------------------------------------//
 //call UI class
 UserInput UserInput;
+
+std::cout << "--------------------------------------------------\n";
+std::cout << "Chose your kind of modulation! (your synth).\n";
+std::string synthOptions[2] = {"fm", "ring"};
+int synthNumOptions = 2;
+std::string synthSelection = UserInput.retrieveUserSelection(synthOptions, synthNumOptions);
+std::cout << "--------------------------------------------------\n";
+
 // select carrier wave form
 std::cout << "Choose carrier waveform.\n";
 std::string CarWaveFormOptions[3] = {"sine", "saw", "square"};
 int CarNumWaveFormOptions = 3;
 std::string CarWaveTypeSelection = UserInput.retrieveUserSelection(CarWaveFormOptions, CarNumWaveFormOptions);
+std::cout << "--------------------------------------------------\n";
 
 //select modulator wave form
 std::cout << "Choose modulator waveform.\n";
 std::string ModWaveFormOptions[3] = {"sine", "saw", "square"};
 int ModNumWaveFormOptions = 3;
 std::string ModWaveTypeSelection = UserInput.retrieveUserSelection(ModWaveFormOptions, ModNumWaveFormOptions);
+std::cout << "--------------------------------------------------\n";
 
 //select mod frequency
 std::cout << "Choose a frequency for your modulator.\n";
 int modFreq = UserInput.retrieveValueRange(0, 10000);
+std::cout << "--------------------------------------------------\n";
 
 
-//set fm synth params
-synth->setCarWaveForm(CarWaveTypeSelection,samplerate);
-synth->setModWaveForm(ModWaveTypeSelection,samplerate);
-synth->resetPhase();
-synth->setModFreq(modFreq);
-synth->setModDepth(50);
+//Synth selection.
+//--------------------------------------------------------------------------------------------//
+//make a pointer for synth
+Synth* synth = nullptr;
+if (synthSelection == "fm") {
+  //if user selection is FM make an FM synth and fill te according parameters
+  synth = new FM_synth;
+  ((FM_synth*)synth) -> setCarWaveForm(CarWaveTypeSelection,samplerate);
+  ((FM_synth*)synth) -> setModWaveForm(ModWaveTypeSelection,samplerate);
+  ((FM_synth*)synth) -> resetPhase();
+  ((FM_synth*)synth) -> setModFreq(modFreq);
+  ((FM_synth*)synth) -> setModDepth(50);
+} else if (synthSelection == "ring") {
+  //if user selection is Ring make an Ring synth and fill te according parameters
+  synth = new Ring_synth;
+  ((Ring_synth*)synth)->setCarWaveForm(CarWaveTypeSelection,samplerate);
+  ((Ring_synth*)synth)->setModWaveForm(ModWaveTypeSelection,samplerate);
+  ((Ring_synth*)synth)->resetPhase();
+  ((Ring_synth*)synth)->setModFreq(modFreq);
+}
 
-
+//Write to file
+//--------------------------------------------------------------------------------------------//
+//make and output file with al the samples, so you can plot the output if you want
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
 
-  for(int i = 0; i < SAMPLERATE; i++) {
-    fileWriter.write(std::to_string(synth.calculate()) + "\n");
+  for(int i = 0; i < samplerate; i++) {
+    fileWriter.write(std::to_string(synth->calculate()) + "\n");
   }
 #else
 
-  float amplitude = 0.1;
+//generate sound and melody
+//--------------------------------------------------------------------------------------------//
+  float amplitude = 0.05;
   int framecount = 0;
   int interval = 44100;
   int newPitch = 0;
   int length = 0;
 
+//create a melody class and call the melody functions
   Melody melody;
   melody.nextNote();
   melody.setNoteLength();
@@ -119,9 +118,10 @@ synth->setModDepth(50);
           if (newPitch >= 8){
             newPitch = 0; 
               }
-          synth->setCarPitch(melody.getMidiList(newPitch));
+          //set the midipitch according to the melody list
+          synth->setMidiPitch(melody.getMidiList(newPitch));
           framecount = 0;
-
+          //print the pitch for the user
           std::cout << "pitch = " << melody.getMidiList(newPitch) << std::endl;
          }
         }

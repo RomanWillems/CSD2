@@ -5,12 +5,14 @@
 #include "ui.h"
 
 
-FM_synth::FM_synth() : Synth()
-{
-}
+
+//FM synth constructor and destructor
+//--------------------------------------------------------------------------------------------//
+FM_synth::FM_synth() : Synth() {}
 
 FM_synth::~FM_synth()
 {
+    //delete the oscillators when done and reset to nullptr
     delete carrier;
     carrier = nullptr;
 
@@ -18,13 +20,17 @@ FM_synth::~FM_synth()
     modulator = nullptr;
 }
 
+
+//Reset the phase
+//--------------------------------------------------------------------------------------------//
 void FM_synth::resetPhase()
 {
   carrier->resetPhase();
   modulator->resetPhase();
 }
 
-//set the waveform
+//set the waveform's
+//--------------------------------------------------------------------------------------------//
 void FM_synth::setCarWaveForm(std::string waveType, double samplerate)
 {
   if(waveType == "sine") {
@@ -48,6 +54,7 @@ void FM_synth::setModWaveForm(std::string waveType, double samplerate)
 }
 
 // set frequency's
+//--------------------------------------------------------------------------------------------//
 void FM_synth::setModFreq(double modFreq)
 {
   this->modFreq = modFreq;
@@ -84,13 +91,16 @@ float FM_synth::getCarFreq()
   return carFreq;
 }
 
+
 //set mod Depth (give in main)
+//--------------------------------------------------------------------------------------------//
 void FM_synth::setModDepth(double modDepth)
 {
   this->modDepth = modDepth;
 }
 
 //calculate the modulated sample according to FM and give it back
+//--------------------------------------------------------------------------------------------//
 float FM_synth::calculate()
 {
   modulator->tick();
