@@ -16,6 +16,9 @@
 #define WRITE_TO_FILE 0
 
 
+//The jack module's and Write to file module's are given to me by Ciska Vriezenga and Marc Groenewegen.
+//The synth created is a development from the gaven lessons by Ciska and Marc.
+
 int main(int argc,char **argv)
 {
 // create a JackModule instance
