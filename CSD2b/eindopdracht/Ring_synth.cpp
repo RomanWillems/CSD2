@@ -1,0 +1,104 @@
+#include <iostream>
+#include "Ring_synth.h"
+#include "math.h"
+#define SAMPLERATE 44100
+
+
+//Ring synth constructor and destructor
+//--------------------------------------------------------------------------------------------//
+
+Ring_synth::Ring_synth() : Synth() {}
+
+Ring_synth::~Ring_synth()
+{
+    //delete the oscillators when done and reset to nullptr
+    delete carrier;
+    carrier = nullptr;
+
+    delete modulator;
+    modulator = nullptr;
+}
+
+//Reset the phase
+//--------------------------------------------------------------------------------------------//
+void Ring_synth::resetPhase()
+{
+    carrier->resetPhase();
+    modulator->resetPhase();
+}
+
+
+//set the waveform's
+//--------------------------------------------------------------------------------------------//
+void Ring_synth::setCarWaveForm(std::string waveType, double samplerate)
+{
+  if(waveType == "sine") {
+     carrier = new Sine(samplerate);
+  } else if(waveType == "saw") {
+     carrier = new Saw(samplerate);
+  } else if (waveType == "square") { 
+     carrier = new Square(samplerate);
+  }
+}
+
+void Ring_synth::setModWaveForm(std::string waveType, double samplerate)
+{
+  if(waveType == "sine") {
+     modulator = new Sine(samplerate);
+  } else if(waveType == "saw") {
+     modulator = new Saw(samplerate);
+  } else if (waveType == "square") { 
+    modulator = new Square(samplerate);
+  }
+}
+
+// set frequency's
+//--------------------------------------------------------------------------------------------//
+void Ring_synth::setModFreq(double modFreq)
+{
+    this->modFreq = modFreq;
+    modulator->setFrequency(modFreq);
+
+
+}
+
+float Ring_synth::getModFreq()
+{
+    return modFreq;
+}
+
+void Ring_synth::setCarPitch(float midiPitch)
+{
+    this->midiPitch = midiPitch;
+    setCarFreq(mtof(midiPitch));
+}
+
+float Ring_synth::getCarPitch()
+{
+    return midiPitch;
+
+}
+
+void Ring_synth::setCarFreq(float freq)
+{
+    carFreq = freq;
+    carrier->setFrequency(carFreq);
+
+}
+
+float Ring_synth::getCarFreq()
+{
+    return carFreq;
+}
+
+
+//calculate the modulated sample according to ring modulation and give it back
+//--------------------------------------------------------------------------------------------//
+float Ring_synth::calculate() {
+
+    carrier->tick();
+    modulator->tick();
+    sample = (carrier->getSample() * modulator->getSample());
+    return sample;
+
+}
