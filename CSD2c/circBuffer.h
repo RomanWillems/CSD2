@@ -1,7 +1,23 @@
+#pragma once
 
-class circBuffer {
-    
-    circBuffer();
-    ~circBuffer();
+#include <iostream>
+
+
+class CircBuffer {
+public:
+    CircBuffer(int size, int numSampleDelay);
+    ~CircBuffer();
+
+    void write(float value);
+    float read();
+
+private:
+    int wrap();
+    int getDistanceRW();
+    int readH = size - numSamplesDelay;
+    int writeH = 0;
+    int size;
+    int numSampsDelay;
+    float* buffer[4] = {0,0,0,0};
 
 };
