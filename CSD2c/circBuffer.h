@@ -1,0 +1,7 @@
+
+class circBuffer {
+    
+    circBuffer();
+    ~circBuffer();
+
+};
