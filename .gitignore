@@ -1,5 +1,9 @@
 .DS_Store
+.asd
 
 #get rid of .o
 
- *.o 
+*.o 
+*.pages
+*.csv
+*.png

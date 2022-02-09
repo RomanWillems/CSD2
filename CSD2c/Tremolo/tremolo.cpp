@@ -3,7 +3,7 @@
 
 
 
-Tremolo::Tremolo(float freq, int samplerate)
+Tremolo::Tremolo(float freq, int samplerate) : modSignal(0)
 {
     osc = new Sine(freq, samplerate);
 }
@@ -23,8 +23,8 @@ float Tremolo::processFrame(float sample)
 {
 
     //oscilattor is in range [1-,1]
-    //ransform to [0,1]
+    //transform to [0,1]
     float modSignal = (osc->genNextSample() + 1.0f) * 0.5f;
 
-    return sample * amplitude;
+    return modSignal;
 }

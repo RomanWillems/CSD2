@@ -12,6 +12,7 @@ public:
     float processFrame(float sample);
 
     //setters and getters
+    //set the frequency of the tremolo
     void SetModFreq(float freq);
 
 private:
