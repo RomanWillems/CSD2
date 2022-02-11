@@ -1,7 +1,7 @@
 #include "circBuffer.h"
 
 CircBuffer::CircBuffer(int size, int numSampleDelay) :
-    size(size), numSampleDelay(numSampleDelay) 
+    size(size), numSampleDelay(numSampleDelay)
 {
     if(numSampleDelay > size){
         throw ("CircBuffer::CircBuffer exceed size.")
@@ -15,12 +15,12 @@ CircBuffer::CircBuffer(int size, int numSampleDelay) :
     }
 }
 
-CircBuffer::~CircBuffer() 
+CircBuffer::~CircBuffer()
 {
     delete [] buffer;
 }
 
-CircBuffer::write(float Value) 
+CircBuffer::write(float Value)
 {
     buffer[writeH++] = value;
     writeH = wrapH(writeH);

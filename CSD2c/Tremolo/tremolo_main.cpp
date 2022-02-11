@@ -4,6 +4,7 @@
 #include "math.h"
 #include "writeToFile.h"
 #include "tremolo.h"
+#include "sine.h"
 
 /*
  * NOTE: jack2 needs to be installed
@@ -13,7 +14,7 @@
  * jackd -d coreaudio
  */
 
-#define WRITE_TO_FILE 1
+#define WRITE_TO_FILE 0
 #define WRITE_NUM_SAMPLES 44100
 
 int main(int argc,char **argv)
@@ -28,20 +29,23 @@ int main(int argc,char **argv)
   float amplitude = 0.5;
 
   // instantiate tremolo effect
-  Tremolo Tremolo(20, samplerate);
+  Tremolo Tremolo(4, samplerate, "Square");
+  Sine sine(400, samplerate);
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&amplitude, &Tremolo, &fileWriter](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [&sine, &amplitude, &Tremolo, &fileWriter](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #else
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&amplitude, &tremolo](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [&sine, &amplitude, &Tremolo](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #endif
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = Tremolo.processFrame(inBuf[i]) * amplitude;
+      outBuf[i] = sine.genNextSample() * Tremolo.processFrame(inBuf[i]);
+      //outBuf[i] = inBuf[i] * Tremolo.processFrame(inBuf[i]);
+
       // ----- write result to file -----
 #if WRITE_TO_FILE
       static int count = 0;

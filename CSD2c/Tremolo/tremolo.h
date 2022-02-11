@@ -6,7 +6,7 @@
 class Tremolo
 {
 public:
-    Tremolo(float freq, int samplerate);
+    Tremolo(float freq, int samplerate, std::string waveForm);
     ~Tremolo();
 
     float processFrame(float sample);
@@ -14,6 +14,7 @@ public:
     //setters and getters
     //set the frequency of the tremolo
     void SetModFreq(float freq);
+
 
 private:
     Oscillator* osc;
