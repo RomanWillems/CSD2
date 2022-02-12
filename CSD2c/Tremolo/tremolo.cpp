@@ -6,7 +6,7 @@
 
 
 
-Tremolo::Tremolo(float freq, int samplerate, std::string waveForm) : modSignal(0)
+Tremolo::Tremolo(float freq, int samplerate, std::string waveForm) : AudioEffect()
 {
   if(waveForm == "Sine") {
     osc = new Sine(freq, samplerate);
@@ -28,12 +28,7 @@ void Tremolo::SetModFreq(float freq)
     osc->setFrequency(freq);
 }
 
-float Tremolo::processFrame(float sample)
+void Tremolo::getModSignal(float sample)
 {
-
-    //oscilattor is in range [1-,1]
-    //transform to [0,1]
-    float modSignal = (osc->genNextSample() + 1.0f) * 0.5f;
-
-    return modSignal;
+  this->sample = sample;
 }

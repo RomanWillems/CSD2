@@ -5,6 +5,7 @@
 #include "writeToFile.h"
 #include "tremolo.h"
 #include "sine.h"
+#include "audioEffect.h"
 
 /*
  * NOTE: jack2 needs to be installed
@@ -30,6 +31,8 @@ int main(int argc,char **argv)
 
   // instantiate tremolo effect
   Tremolo Tremolo(4, samplerate, "Square");
+
+  //instantiate sine wave
   Sine sine(400, samplerate);
 
 #if WRITE_TO_FILE
