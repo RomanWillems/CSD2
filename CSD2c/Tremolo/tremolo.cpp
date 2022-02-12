@@ -23,12 +23,19 @@ Tremolo::~Tremolo()
     osc = nullptr;
 }
 
-void Tremolo::SetModFreq(float freq)
+void Tremolo::setModFreq(float freq)
 {
     osc->setFrequency(freq);
 }
 
-void Tremolo::getModSignal(float sample)
+void Tremolo::setModSignal(float sample)
 {
+  sample = processFrame();
   this->sample = sample;
+
+}
+
+float Tremolo::getModSignal(float sample)
+{
+  return sample;
 }

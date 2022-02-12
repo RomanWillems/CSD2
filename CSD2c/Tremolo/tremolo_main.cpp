@@ -15,7 +15,7 @@
  * jackd -d coreaudio
  */
 
-#define WRITE_TO_FILE 0
+#define WRITE_TO_FILE 1
 #define WRITE_NUM_SAMPLES 44100
 
 int main(int argc,char **argv)
@@ -30,7 +30,7 @@ int main(int argc,char **argv)
   float amplitude = 0.5;
 
   // instantiate tremolo effect
-  Tremolo Tremolo(4, samplerate, "Square");
+  Tremolo Tremolo(10, samplerate, "Square");
 
   //instantiate sine wave
   Sine sine(400, samplerate);
@@ -46,7 +46,7 @@ int main(int argc,char **argv)
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #endif
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = sine.genNextSample() * Tremolo.processFrame(inBuf[i]);
+      outBuf[i] = sine.genNextSample() * Tremolo.getModSignal(inBuf[i]);
       //outBuf[i] = inBuf[i] * Tremolo.processFrame(inBuf[i]);
 
       // ----- write result to file -----

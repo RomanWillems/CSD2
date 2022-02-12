@@ -9,7 +9,7 @@ public:
   AudioEffect();
   ~AudioEffect();
 
-  float processFrame(float sample);
+  float processFrame();
 
 private:
   Oscillator* osc;

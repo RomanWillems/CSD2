@@ -12,10 +12,12 @@ public:
 
     //setters and getters
     //set the frequency of the tremolo
-    void SetModFreq(float freq);
-    void getModSignal(float sample);
+    void setModFreq(float freq);
+    void setModSignal(float sample);
+
+    float getModSignal(float sample);
 
 private:
-    Oscillator* osc;
     float sample;
+    Oscillator* osc;
 };
