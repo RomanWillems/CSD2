@@ -7,10 +7,26 @@ class AudioEffect
 {
 public:
   AudioEffect();
-  ~AudioEffect();
+  virtual ~AudioEffect();
 
-  float processFrame();
+
+  //process the sample
+  void processFrame(float input, float output);
+
+  float getSample();
+
+  void setDryWet(float newDryWet);
+
+
+  //Samplerate
+
+protected:
+  virtual void applyEffect(float input, float output) = 0;
+
 
 private:
-  Oscillator* osc;
+  float lastSample;
+  float dryWet;
+  float wetDry;
+
 };

@@ -1,5 +1,10 @@
 #include "audioEffect.h"
 
+//TODO:
+//Add setDryWet();
+//getSample();
+//getParameter(); <- key/value
+
 AudioEffect::AudioEffect()
 {
 }
@@ -8,10 +13,23 @@ AudioEffect::~AudioEffect()
 {
 }
 
-float AudioEffect::processFrame()
+void AudioEffect::processFrame(float input, float output)
 {
-    //oscilattor is in range [1-,1]
-    //transform to [0,1]
-    float modSignal = (osc->genNextSample() + 1.0f) * 0.5f;
-    return modSignal;
+  //apply the virtual effect from effect class (tremolo, delay etc..)
+  applyEffect(input, output);
+  output = input * wetDry + output * dryWet;
+  lastSample = output;
+}
+
+float AudioEffect::getSample()
+{
+  return lastSample;
+}
+
+
+void AudioEffect::setDryWet(float newDryWet)
+{
+  this-> dryWet = newDryWet;
+  std::cout << "newDryWet = " << newDryWet << std::endl;
+  wetDry = 1.0f - newDryWet;
 }

@@ -28,14 +28,10 @@ void Tremolo::setModFreq(float freq)
     osc->setFrequency(freq);
 }
 
-void Tremolo::setModSignal(float sample)
+void Tremolo::applyEffect(float input, float output)
 {
-  sample = processFrame();
-  this->sample = sample;
 
-}
+  modSignal = (osc->genNextSample() + 1.0f) * 0.5f;
+  output = input * modSignal;
 
-float Tremolo::getModSignal(float sample)
-{
-  return sample;
 }

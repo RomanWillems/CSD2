@@ -15,7 +15,7 @@
  * jackd -d coreaudio
  */
 
-#define WRITE_TO_FILE 1
+#define WRITE_TO_FILE 0
 #define WRITE_NUM_SAMPLES 44100
 
 int main(int argc,char **argv)
@@ -29,25 +29,25 @@ int main(int argc,char **argv)
   float samplerate = jack.getSamplerate();
   float amplitude = 0.5;
 
-  // instantiate tremolo effect
-  Tremolo Tremolo(10, samplerate, "Square");
 
-  //instantiate sine wave
   Sine sine(400, samplerate);
+  // instantiate tremolo effect
+  Tremolo tremolo(5, samplerate, "Square");
+  tremolo.setDryWet(0.5);
+
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&sine, &amplitude, &Tremolo, &fileWriter](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [&sine, &amplitude, &tremolo, &fileWriter](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #else
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&sine, &amplitude, &Tremolo](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [&sine, &amplitude, &tremolo](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #endif
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = sine.genNextSample() * Tremolo.getModSignal(inBuf[i]);
-      //outBuf[i] = inBuf[i] * Tremolo.processFrame(inBuf[i]);
+      outBuf[i] = sine.genNextSample() * tremolo.getSample();
 
       // ----- write result to file -----
 #if WRITE_TO_FILE
