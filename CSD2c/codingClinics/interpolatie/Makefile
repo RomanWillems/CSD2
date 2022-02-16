@@ -4,9 +4,9 @@ LDFLAGS=-ljack
 # the cpp files from the current project to include
 SRC_PROJECT = interpolatie.cpp
 # the directory to the folder with the shared modules
-SHAREDCODE_PATH = ../../CSD2c/
+SHAREDCODE_PATH = 
 # the modules to include
-MODULES = sharedCode/oscillators sharedCode/utilities audioEffect
+MODULES =
 TARGET=example
 
 # append shared code path prefix to modules
