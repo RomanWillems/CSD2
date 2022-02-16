@@ -11,7 +11,7 @@ public:
 
 
   //process the sample
-  void processFrame(float input, float output);
+  void processFrame(float& input, float& output);
 
   float getSample();
 
@@ -21,7 +21,7 @@ public:
   //Samplerate
 
 protected:
-  virtual void applyEffect(float input, float output) = 0;
+  virtual void applyEffect(float& input, float& output) = 0;
 
 
 private:

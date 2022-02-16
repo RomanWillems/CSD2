@@ -13,7 +13,7 @@ public:
     //setters and getters
     //set the frequency of the tremolo
     void setModFreq(float freq);
-    void applyEffect(float input, float output) override;
+    void applyEffect(float& input, float& output) override;
 
 
 
