@@ -19,7 +19,7 @@ void AudioEffect::processFrame(float& input, float& output)
   applyEffect(input, output);
   output = input * wetDry + output * dryWet;
   lastSample = output;
-  std::cout << "wetDry = " << dryWet << std::endl;
+  //std::cout << "wetDry = " << dryWet << std::endl;
 }
 
 float AudioEffect::getSample()

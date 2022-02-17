@@ -3,7 +3,7 @@
 #include "jack_module.h"
 #include "math.h"
 #include "writeToFile.h"
-#include "tremolo.h"
+#include "delay.h"
 #include "sine.h"
 #include "audioEffect.h"
 
@@ -29,24 +29,25 @@ int main(int argc,char **argv)
   float samplerate = jack.getSamplerate();
   float amplitude = 0.5;
 
-  // instantiate tremolo effect
-  Tremolo tremolo(2, samplerate, "Square");
-  tremolo.setDryWet(0.5);
+  // instantiate delay effect
+  // delay(Max size, numsamples, feedback)
+  Delay delay(samplerate, samplerate / 5.0, 0.5);
+  delay.setDryWet(0.2);
 
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&amplitude, &tremolo, &fileWriter](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [&amplitude, &delay, &fileWriter](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #else
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&amplitude, &tremolo](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [&amplitude, &delay](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #endif
     for(unsigned int i = 0; i < nframes; i++) {
 
-      tremolo.processFrame(inBuf[i], outBuf[i]);
+      delay.processFrame(inBuf[i], outBuf[i]);
       //outBuf[i] = inBuf[i] * amplitude;
 
       // ----- write result to file -----
