@@ -33,9 +33,8 @@ int main(int argc,char **argv)
   // instantiate delay effect
   // delay(Max size, numsamples, feedback)
 
-
-  Delay delay(samplerate, samplerate / 8.0, 0.9);
-  delay.setDryWet(0.1);
+  Delay delay(samplerate, samplerate / 4.0, 0.5);
+  delay.setDryWet(0.5);
 
 
 #if WRITE_TO_FILE

@@ -7,7 +7,13 @@
 class Tremolo : public AudioEffect
 {
 public:
-    Tremolo(float freq, int samplerate, std::string waveForm);
+    enum waveFormType {
+      SINE,
+      SAW,
+      SQUARE,
+      SIZE
+    };
+    Tremolo(float freq, int samplerate, int waveFormType);
     ~Tremolo() override;
 
     //setters and getters

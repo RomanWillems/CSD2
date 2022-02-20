@@ -30,28 +30,38 @@ int main(int argc,char **argv)
 
   //create a userInput instance
   UserInput userInput;
-  //select Tremolo dry/wet
+
+  //select waveForm
   std::cout << "--------------------------------------------------\n";
+  std::cout << "Set your waveForm.\n";
+  std::cout << "sine (0)\n";
+  std::cout << "saw (1)\n";
+  std::cout << "square (2)\n";
+  float u_waveForm = userInput.retrieveValueRange(0, 3);
+
+  //select modFrequency
+  std::cout << "--------------------------------------------------\n";
+  std::cout << "Set your frequency in range [0,500].\n";
+  float u_modFreq = userInput.retrieveValueRange(0, 500);
+
+  //select Tremolo dry/wet
   std::cout << "Set your dry/wet in range [0,1].\n";
   float u_dryWet = userInput.retrieveValueRange(0, 1);
   std::cout << "--------------------------------------------------\n";
 
-
-  // instantiate tremolo effect
-  Tremolo tremolo(25, samplerate, "Sine");
+  // instantiate tremolo effect (fq,samplerate,waveform)
+  Tremolo tremolo(u_modFreq, samplerate, u_waveForm);
   tremolo.setDryWet(u_dryWet);
 
-  //set amplitude
-  float amplitude = 0.5;
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&amplitude, &tremolo, &fileWriter](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [&tremolo, &fileWriter](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #else
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&amplitude, &tremolo](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [&tremolo](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #endif
     for(unsigned int i = 0; i < nframes; i++) {
