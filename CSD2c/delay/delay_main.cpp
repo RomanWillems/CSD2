@@ -6,6 +6,7 @@
 #include "delay.h"
 #include "sine.h"
 #include "audioEffect.h"
+#include "userInput.h"
 
 /*
  * NOTE: jack2 needs to be installed
@@ -31,8 +32,10 @@ int main(int argc,char **argv)
 
   // instantiate delay effect
   // delay(Max size, numsamples, feedback)
-  Delay delay(samplerate, samplerate / 5.0, 0.5);
-  delay.setDryWet(0.2);
+
+
+  Delay delay(samplerate, samplerate / 8.0, 0.9);
+  delay.setDryWet(0.1);
 
 
 #if WRITE_TO_FILE

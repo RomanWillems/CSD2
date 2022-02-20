@@ -6,6 +6,7 @@
 #include "tremolo.h"
 #include "sine.h"
 #include "audioEffect.h"
+#include "userInput.h"
 
 /*
  * NOTE: jack2 needs to be installed
@@ -23,16 +24,25 @@ int main(int argc,char **argv)
 
   // create a JackModule instance
   JackModule jack;
-
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   float samplerate = jack.getSamplerate();
-  float amplitude = 0.5;
+
+  //create a userInput instance
+  UserInput userInput;
+  //select Tremolo dry/wet
+  std::cout << "--------------------------------------------------\n";
+  std::cout << "Set your dry/wet in range [0,1].\n";
+  float u_dryWet = userInput.retrieveValueRange(0, 1);
+  std::cout << "--------------------------------------------------\n";
+
 
   // instantiate tremolo effect
-  Tremolo tremolo(2, samplerate, "Square");
-  tremolo.setDryWet(0.5);
+  Tremolo tremolo(25, samplerate, "Sine");
+  tremolo.setDryWet(u_dryWet);
 
+  //set amplitude
+  float amplitude = 0.5;
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
