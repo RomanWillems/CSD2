@@ -28,23 +28,41 @@ int main(int argc,char **argv)
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
   float samplerate = jack.getSamplerate();
-  float amplitude = 0.5;
+  //float amplitude = 0.5;
+
+  //create a userInput instance
+  UserInput userInput;
+
+  //select delayTime
+  std::cout << "--------------------------------------------------\n";
+  std::cout << "Set your delay time in range [0,10].\n";
+  float u_delayTime = userInput.retrieveValueRange(0, 10);
+  std::cout << "--------------------------------------------------\n";
+
+  //select delayTime
+  std::cout << "Set your feedback in range [0,1].\n";
+  float u_feedback = userInput.retrieveValueRange(0, 1);
+  std::cout << "--------------------------------------------------\n";
+
+  //select feedback
+  std::cout << "Set your dryWet in range [0,1].\n";
+  float u_dryWet = userInput.retrieveValueRange(0, 1);
+  std::cout << "--------------------------------------------------\n";
 
   // instantiate delay effect
   // delay(Max size, numsamples, feedback)
-
-  Delay delay(samplerate, samplerate / 4.0, 0.5);
-  delay.setDryWet(0.5);
+  Delay delay(samplerate, samplerate / u_delayTime, u_feedback);
+  delay.setDryWet(u_dryWet);
 
 
 #if WRITE_TO_FILE
   WriteToFile fileWriter("output.csv", true);
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&amplitude, &delay, &fileWriter](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [ &delay, &fileWriter](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #else
   // assign a function to the JackModule::onProces
-  jack.onProcess = [&amplitude, &delay](jack_default_audio_sample_t* inBuf,
+  jack.onProcess = [&delay](jack_default_audio_sample_t* inBuf,
     jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
 #endif
     for(unsigned int i = 0; i < nframes; i++) {
