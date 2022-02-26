@@ -6,21 +6,24 @@ typedef unsigned int uint;
 class Delay : public AudioEffect
 {
 public:
-  Delay(int size, int numSamples, float feedback);
+  Delay(int size, float numSamples, float feedback);
   ~Delay();
 
   void applyEffect(float& input, float& output) override;
+
 
   float getDistance();
 
 private:
   int size;
   int numSamples;
-  float feedback;
-  float* buffer;
-
   int write;
   int read;
+
+  float feedback;
+  float* buffer;
+  float samplerate;
+
 
   inline float wrap(int place);
 

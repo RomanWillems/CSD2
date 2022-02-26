@@ -6,7 +6,7 @@
 class AudioEffect
 {
 public:
-  AudioEffect();
+  AudioEffect(unsigned int samplerate);
   virtual ~AudioEffect();
 
 
@@ -16,7 +16,7 @@ public:
   float getSample();
 
   void setDryWet(float newDryWet);
-
+  float setDelayMS(float newDelayMS);
 
   //Samplerate
 
@@ -28,5 +28,8 @@ private:
   float lastSample;
   float dryWet;
   float wetDry;
+  float delayMS;
+  float delaySamps;
+  float samplerate;
 
 };

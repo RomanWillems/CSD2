@@ -35,8 +35,8 @@ int main(int argc,char **argv)
 
   //select delayTime
   std::cout << "--------------------------------------------------\n";
-  std::cout << "Set your delay time in range [0,10].\n";
-  float u_delayTime = userInput.retrieveValueRange(0, 10);
+  std::cout << "Set your delay time (ms) in range [0,200].\n";
+  float u_delayTime = userInput.retrieveValueRange(0, 200);
   std::cout << "--------------------------------------------------\n";
 
   //select delayTime
@@ -51,8 +51,10 @@ int main(int argc,char **argv)
 
   // instantiate delay effect
   // delay(Max size, numsamples, feedback)
-  Delay delay(samplerate, samplerate / u_delayTime, u_feedback);
+  Delay delay(samplerate, samplerate, u_feedback);
   delay.setDryWet(u_dryWet);
+   delay.setDelayMS(u_delayTime);
+
 
 
 #if WRITE_TO_FILE

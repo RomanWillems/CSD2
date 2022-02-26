@@ -1,12 +1,9 @@
 #include "audioEffect.h"
 
-//TODO:
-//Add setDryWet();
-//getSample();
-//getParameter(); <- key/value
 
-AudioEffect::AudioEffect()
+AudioEffect::AudioEffect(unsigned int samplerate)
 {
+  this->samplerate = samplerate;
 }
 
 AudioEffect::~AudioEffect()
@@ -25,6 +22,13 @@ void AudioEffect::processFrame(float& input, float& output)
 float AudioEffect::getSample()
 {
   return lastSample;
+}
+
+float AudioEffect::setDelayMS(float newDelayMS)
+{
+  this->delayMS = newDelayMS;
+  delaySamps = newDelayMS * (samplerate / 1000);
+  return delaySamps;
 }
 
 
