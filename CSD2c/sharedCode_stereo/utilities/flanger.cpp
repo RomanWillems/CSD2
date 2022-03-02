@@ -18,11 +18,10 @@
 *  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************
 *
-*  File name     : panning.cpp
+*  File name     : flanger.cpp
 *  System name   : jack_module
 *
-*  Description   : example of stereo panning where a mono input signal is
-*                    amplitude-panned between left and right outputs
+*  Description   : Flanger effect using JACK module
 *
 *
 *  Author        : Marc_G
@@ -34,121 +33,88 @@
 #include <string>
 #include <math.h>
 #include <thread>
-#include <unistd.h> // sleep
 #include "jack_module.h"
-#include "keypress.h"
-#include "bufferDebugger.h"
-
-#include "waveShaper.h"
 
 
-unsigned long chunksize=256;
+/*
+ * With this abstraction module we don't need to know JACK's buffer size
+ *   but we can independently determine our own block sizes
+ */
+unsigned long chunksize=2048;
+
 
 JackModule jack;
 unsigned long samplerate=44100; // default
 
+
+/*
+ * Delay line settings
+ */
+#define MAXDELAY 20000
+
+jack_default_audio_sample_t delayline[MAXDELAY+1]; // one extra location!
+unsigned long delay=MAXDELAY;
+unsigned long delay_index=0;
+
 bool running=true;
 
-#define BUFFERSIZE 1000
 
-float totaal;
-int number_ints = 1000; //3000 - -3000
-
-void job_1(){
-    for (int i = 0; i< number_ints; i++){
-        totaal++;
-    }
-}
-
-void job_2(){
-    for (int i = 0; i< number_ints; i++){
-        totaal--;
-    }
-}
-
-static void filter(){
-
-
-
-
+/*
+ * filter function reads audio samples from JACK and writes a processed
+ *   version back to JACK
+ */
+static void filter()
+{
 float *inbuffer = new float[chunksize];
-float *outbuffer = new float[chunksize*2];
-// float wavetableBuffer[BUFFERSIZE];
+float *outbuffer = new float[chunksize];
 
-WaveShaper wave(BUFFERSIZE);
-// wave.genWaveshape(10.0);
-// wave.genWaveshapeOscillator(Waveshaper::WaveChoise::SAW, 10);
-for(int i = 0; i < BUFFERSIZE; i++){
-  std::thread thread_1(job_1);
-  std::thread thread_2(job_2);
-
-  thread_1.join();
-  thread_2.join();
-
-  wave.generateWave(totaal);
-}
-wave.plot_waveshaper();
-
-    std::cout << "\n***** DONE ***** "
-    << "\nOutput is written to file output.csv" << std::endl;
 
   do {
     jack.readSamples(inbuffer,chunksize);
-
     for(unsigned int x=0; x<chunksize; x++)
     {
-
-      float amp_left=0.8;
-      float amp_right=0.8;
-
-      outbuffer[2*x] = amp_left * wave.interpolation(inbuffer[x]);
-      outbuffer[2*x+1] = amp_right * wave.interpolation(inbuffer[x]);
+      outbuffer[x]=inbuffer[x]+delayline[delay_index];
+      delayline[delay_index]=inbuffer[x];
+      delay_index++;
+      delay_index%=delay;
     }
-
-    jack.writeSamples(outbuffer,chunksize*2);
-
+    jack.writeSamples(outbuffer,chunksize);
   } while(running);
 
 } // filter()
 
 
 
-int main(int argc,char **argv){
+int main(int argc,char **argv)
+{
 
-
-
-
-
-
-char command='@';
-  jack.setNumberOfInputChannels(1);
-  // jack.setNumberOfOutputChannels(2);
   jack.init(argv[0]); // use program name as JACK client name
   jack.autoConnect();
+
   samplerate=jack.getSamplerate();
   std::cerr << "Samplerate: " << samplerate << std::endl;
 
   std::thread filterThread(filter);
+  std::cerr << "Delay set to " << delay << std::endl;
 
-  while(command != 'q')
+  while(running)
   {
-    if(keypressed()) {
-      command = getchar();
-
-      if(command == '+' || command == '=') {
-        std::cout << "je hebt geklikt baas" << std::endl;
-      };
-      if(command == '-'){
-        std::cout << "je hebt geklikt baas" << std::endl;
-      };
+    std::string delayLengthString;
+    std::cin >> delayLengthString;
+    if(delayLengthString == "quit"){
+      running=false;
     }
-    usleep(100000);
+    unsigned long delayLength = atoi(delayLengthString.c_str());
+    if(delayLength <= MAXDELAY && delayLength >= 1){
+      delay=delayLength;
+      std::cerr << "Delay set to " << delay << std::endl;
+    }
   }
 
-  running=false;
   filterThread.join();
 
   jack.end();
 
   return 0;
 } // main()
+

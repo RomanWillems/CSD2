@@ -37,110 +37,87 @@
 #include <unistd.h> // sleep
 #include "jack_module.h"
 #include "keypress.h"
-#include "bufferDebugger.h"
 
-#include "waveShaper.h"
+float panFreq=1.0; // LFO frequency
+double panPhase=0; // start in the center
+float amp_left=0.5 * (sin(panPhase) + 1);
+float amp_right=0.5 *(-sin(panPhase) + 1);
 
-
+/*
+ * With this abstraction module we don't need to know JACK's buffer size.
+ *  We can determine our own block sizes and even let the input block
+ *  size differ from the output block size.
+ */
 unsigned long chunksize=256;
+
 
 JackModule jack;
 unsigned long samplerate=44100; // default
 
 bool running=true;
 
-#define BUFFERSIZE 1000
 
-float totaal;
-int number_ints = 1000; //3000 - -3000
-
-void job_1(){
-    for (int i = 0; i< number_ints; i++){
-        totaal++;
-    }
-}
-
-void job_2(){
-    for (int i = 0; i< number_ints; i++){
-        totaal--;
-    }
-}
-
-static void filter(){
-
-
-
-
+/*
+ * filter function reads audio samples from JACK and writes a processed
+ *   version back to JACK
+ * Output is handed to JACK as interleaved sample frames
+ */
+static void filter()
+{
 float *inbuffer = new float[chunksize];
 float *outbuffer = new float[chunksize*2];
-// float wavetableBuffer[BUFFERSIZE];
-
-WaveShaper wave(BUFFERSIZE);
-// wave.genWaveshape(10.0);
-// wave.genWaveshapeOscillator(Waveshaper::WaveChoise::SAW, 10);
-for(int i = 0; i < BUFFERSIZE; i++){
-  std::thread thread_1(job_1);
-  std::thread thread_2(job_2);
-
-  thread_1.join();
-  thread_2.join();
-
-  wave.generateWave(totaal);
-}
-wave.plot_waveshaper();
-
-    std::cout << "\n***** DONE ***** "
-    << "\nOutput is written to file output.csv" << std::endl;
+float fader=0; // panning fader with range [-1,1]
 
   do {
     jack.readSamples(inbuffer,chunksize);
-
     for(unsigned int x=0; x<chunksize; x++)
     {
-
-      float amp_left=0.8;
-      float amp_right=0.8;
-
-      outbuffer[2*x] = amp_left * wave.interpolation(inbuffer[x]);
-      outbuffer[2*x+1] = amp_right * wave.interpolation(inbuffer[x]);
+      fader = sin(panPhase);
+      amp_left=0.5 * (fader + 1);
+      amp_right=0.5 *(-fader + 1);
+      outbuffer[2*x]= amp_left * inbuffer[x];
+      outbuffer[2*x+1]= amp_right * inbuffer[x];
+      panPhase += 2*M_PI*panFreq/samplerate;
     }
-
     jack.writeSamples(outbuffer,chunksize*2);
-
   } while(running);
 
 } // filter()
 
 
 
-int main(int argc,char **argv){
-
-
-
-
-
-
+int main(int argc,char **argv)
+{
 char command='@';
+
   jack.setNumberOfInputChannels(1);
-  // jack.setNumberOfOutputChannels(2);
+  jack.setNumberOfOutputChannels(2);
+
   jack.init(argv[0]); // use program name as JACK client name
+
   jack.autoConnect();
+
   samplerate=jack.getSamplerate();
   std::cerr << "Samplerate: " << samplerate << std::endl;
 
   std::thread filterThread(filter);
 
+  // init_keypress();
+
   while(command != 'q')
   {
     if(keypressed()) {
       command = getchar();
-
-      if(command == '+' || command == '=') {
-        std::cout << "je hebt geklikt baas" << std::endl;
-      };
-      if(command == '-'){
-        std::cout << "je hebt geklikt baas" << std::endl;
-      };
+      /*
+       * '+' increases the panning rate with 10%
+       *     for convenience the '=' key does the same as it's the
+       *     same key without shift
+       *
+       * '-' decreases the panning rate with 10%
+       */
+      if(command == '+' || command == '=') panFreq *= 1.1;
+      if(command == '-') panFreq *= 0.9;
+      std::cout << "Panning frequency: " << panFreq << std::endl;
     }
     usleep(100000);
   }
@@ -152,3 +129,4 @@ char command='@';
 
   return 0;
 } // main()
+
