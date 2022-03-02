@@ -2,7 +2,7 @@
 
 
 
-Delay::Delay(int size, float numSamples, float feedback) : AudioEffect(samplerate),
+Delay::Delay(int size, float numSamples, float feedback) : AudioEffect(),
   size(size), write(0), read(size - numSamples), feedback(feedback)
 {
     if(numSamples > size) {
@@ -14,6 +14,7 @@ Delay::Delay(int size, float numSamples, float feedback) : AudioEffect(samplerat
       buffer[i] = 0;
     }
   }
+
 
   Delay::~Delay()
   {

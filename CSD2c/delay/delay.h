@@ -11,19 +11,15 @@ public:
 
   void applyEffect(float& input, float& output) override;
 
-
   float getDistance();
 
 private:
   int size;
-  int numSamples;
+  float* buffer;
+
   int write;
   int read;
-
   float feedback;
-  float* buffer;
-  float samplerate;
-
 
   inline float wrap(int place);
 

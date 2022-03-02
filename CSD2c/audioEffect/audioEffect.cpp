@@ -1,9 +1,8 @@
 #include "audioEffect.h"
 
 
-AudioEffect::AudioEffect(unsigned int samplerate)
+AudioEffect::AudioEffect()
 {
-  this->samplerate = samplerate;
 }
 
 AudioEffect::~AudioEffect()
@@ -22,13 +21,6 @@ void AudioEffect::processFrame(float& input, float& output)
 float AudioEffect::getSample()
 {
   return lastSample;
-}
-
-float AudioEffect::setDelayMS(float newDelayMS)
-{
-  this->delayMS = newDelayMS;
-  delaySamps = newDelayMS * (samplerate / 1000);
-  return delaySamps;
 }
 
 
