@@ -17,6 +17,8 @@ public:
 
   void setDryWet(float newDryWet);
 
+  float msToSamps(float delayMS);
+
   //Samplerate
 
 protected:
@@ -24,7 +26,7 @@ protected:
 
 public:
   float delaySamps;
-  float samplerate;
+  float samplerate = 44100;
 
 private:
   float lastSample;

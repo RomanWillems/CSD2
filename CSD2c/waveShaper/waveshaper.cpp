@@ -52,7 +52,6 @@ void WaveShaper::bufferWaveShaper(float input, int x)
 }
 
 
-
 float WaveShaper::interpolation(float input)
 {
     float index = (input + 1) * (buffersize/2);

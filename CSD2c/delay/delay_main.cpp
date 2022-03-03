@@ -33,21 +33,25 @@ int main(int argc,char **argv)
   //create a userInput instance
   UserInput userInput;
 
-
   //select feedback
-  std::cout << "Set your feedback in range [0,1].\n";
-  float u_feedback = userInput.retrieveValueRange(0, 1);
+  std::cout << "Set your delay in MS in range [0,1000].\n";
+  float u_delayMS = userInput.retrieveValueRange(0, 1000);
   std::cout << "--------------------------------------------------\n";
 
-  //select dryWet
-  std::cout << "Set your dryWet in range [0,1].\n";
-  float u_dryWet = userInput.retrieveValueRange(0, 1);
-  std::cout << "--------------------------------------------------\n";
+  // //select feedback
+  // std::cout << "Set your feedback in range [0,1].\n";
+  // float u_feedback = userInput.retrieveValueRange(0, 1);
+  // std::cout << "--------------------------------------------------\n";
+  //
+  // //select dryWet
+  // std::cout << "Set your dryWet in range [0,1].\n";
+  // float u_dryWet = userInput.retrieveValueRange(0, 1);
+  // std::cout << "--------------------------------------------------\n";
 
   // instantiate delay effect
   // delay(Max size, numsamples, feedback)
-  Delay delay(samplerate, samplerate / 10.0, u_feedback);
-  delay.setDryWet(u_dryWet);
+  Delay delay(samplerate, u_delayMS, 0.5);
+  delay.setDryWet(0.5);
 
 
 

@@ -2,10 +2,10 @@
 
 
 
-Delay::Delay(int size, float numSamples, float feedback) : AudioEffect(),
-  size(size), write(0), read(size - numSamples), feedback(feedback)
+Delay::Delay(int size, float delayMS, float feedback) : AudioEffect(),
+  size(size), write(0), read(delayMS), feedback(feedback)
 {
-    if(numSamples > size) {
+    if(msToSamps(delayMS) > size) {
       throw "Samples exceeds delay size";
     }
 
@@ -14,7 +14,6 @@ Delay::Delay(int size, float numSamples, float feedback) : AudioEffect(),
       buffer[i] = 0;
     }
   }
-
 
   Delay::~Delay()
   {

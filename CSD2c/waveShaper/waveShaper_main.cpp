@@ -55,38 +55,37 @@ float totaal;
 int number_ints = 1000; //3000 - -3000
 
 void job_1(){
-    for (int i = 0; i< number_ints; i++){
-        totaal++;
-    }
-}
+      for (int i = 0; i< number_ints; i++){
+          totaal++;
+      }
+  }
 
 void job_2(){
     for (int i = 0; i< number_ints; i++){
-        totaal--;
-    }
-}
+          totaal--;
+      }
+  }
 
 static void filter(){
 
+  float *inbuffer = new float[chunksize];
+  float *outbuffer = new float[chunksize*2];
+  // float wavetableBuffer[BUFFERSIZE];
 
+  WaveShaper wave(BUFFERSIZE);
+  // wave.genWaveshape(10.0);
+  wave.genWaveShapeOscillator(WaveShaper::waveForm::SINE, 10);
 
+  for(int i = 0; i < BUFFERSIZE; i++){
+    std::thread thread_1(job_1);
+    std::thread thread_2(job_2);
 
-float *inbuffer = new float[chunksize];
-float *outbuffer = new float[chunksize*2];
-// float wavetableBuffer[BUFFERSIZE];
+    thread_1.join();
+    thread_2.join();
 
-WaveShaper wave(BUFFERSIZE);
-// wave.genWaveshape(10.0);
-// wave.genWaveshapeOscillator(Waveshaper::WaveChoise::SAW, 10);
-for(int i = 0; i < BUFFERSIZE; i++){
-  std::thread thread_1(job_1);
-  std::thread thread_2(job_2);
-
-  thread_1.join();
-  thread_2.join();
-
-  wave.generateWave(totaal);
+    wave.generateWave(totaal);
 }
+
 wave.plot_waveshaper();
 
     std::cout << "\n***** DONE ***** "
@@ -98,8 +97,8 @@ wave.plot_waveshaper();
     for(unsigned int x=0; x<chunksize; x++)
     {
 
-      float amp_left=0.8;
-      float amp_right=0.8;
+      float amp_left=0.5;
+      float amp_right=0.5;
 
       outbuffer[2*x] = amp_left * wave.interpolation(inbuffer[x]);
       outbuffer[2*x+1] = amp_right * wave.interpolation(inbuffer[x]);
@@ -136,10 +135,10 @@ char command='@';
       command = getchar();
 
       if(command == '+' || command == '=') {
-        std::cout << "je hebt geklikt baas" << std::endl;
+        std::cout << "hoi je klikt plus =" << std::endl;
       };
       if(command == '-'){
-        std::cout << "je hebt geklikt baas" << std::endl;
+        std::cout << "hoi je klikt = -" << std::endl;
       };
     }
     usleep(100000);
