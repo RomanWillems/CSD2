@@ -28,8 +28,3 @@ void AudioEffect::setDryWet(float newDryWet)
   //std::cout << "newDryWet = " << newDryWet << std::endl;
   wetDry = 1.0f - newDryWet;
 }
-
-float AudioEffect::msToSamps(float delayMS)
-{
-  return int((delayMS * (samplerate / 1000.0)) + 0.5);
-}

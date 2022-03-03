@@ -11,16 +11,19 @@ public:
 
   void applyEffect(float& input, float& output) override;
 
+  void msToSamps(float delayMS);
+
+
   float getDistance();
 
 private:
   int size;
   float* buffer;
+  int numsamples;
 
   int write;
   int read;
   float feedback;
-  float delayMS;
 
   inline float wrap(int place);
 

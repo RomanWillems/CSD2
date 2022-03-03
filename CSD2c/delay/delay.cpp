@@ -3,11 +3,13 @@
 
 
 Delay::Delay(int size, float delayMS, float feedback) : AudioEffect(),
-  size(size), write(0), read(delayMS), feedback(feedback)
+  size(size), numsamples(0), write(0), read(size - numsamples), feedback(feedback)
 {
-    if(msToSamps(delayMS) > size) {
+    if(numsamples > size) {
       throw "Samples exceeds delay size";
     }
+
+    msToSamps(delayMS);
 
     buffer = new float[size];
     for(int i = 0; i < size; i++) {
@@ -30,6 +32,14 @@ Delay::Delay(int size, float delayMS, float feedback) : AudioEffect(),
     //write goes through buffer and writes a sample;
     buffer[write++] = input + (output * feedback);
     write = wrap(write);
+
+  }
+
+  void Delay::msToSamps(float delayMS)
+  {
+    this->numsamples = int((delayMS * (samplerate / 1000.0)) + 0.5);
+    this->read = write - numsamples + size;
+    read = wrap(read);
 
   }
 

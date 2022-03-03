@@ -17,8 +17,6 @@ public:
 
   void setDryWet(float newDryWet);
 
-  float msToSamps(float delayMS);
-
   //Samplerate
 
 protected:
