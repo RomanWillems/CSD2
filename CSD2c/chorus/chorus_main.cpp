@@ -49,7 +49,6 @@ unsigned long samplerate=44100; // default
 
 bool running=true;
 
-#define BUFFERSIZE 1000
 
 float totaal;
 int number_ints = 1000; //3000 - -3000
@@ -73,11 +72,11 @@ static void filter(){
 
 
   //chorus(size, ms, feedback)
-  Chorus chorusL(BUFFERSIZE, 10, 0.5);
-  chorusL.setDryWet(0.5);
+  Chorus chorusL(samplerate, 100, 0.5);
+  chorusL.setDryWet(0.7);
 
-  Chorus chorusR(BUFFERSIZE, 12, 0.8);
-  chorusR.setDryWet(0.5);
+  Chorus chorusR(samplerate, 200, 0.8);
+  chorusR.setDryWet(0.7);
 
 //   for(int i = 0; i < BUFFERSIZE; i++){
 //     std::thread thread_1(job_1);

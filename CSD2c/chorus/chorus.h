@@ -16,7 +16,7 @@ public:
 private:
   int size;
   float* buffer;
-  int numsamples;
+  int numsamples = 0;
 
   int write;
   int read;

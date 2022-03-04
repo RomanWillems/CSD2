@@ -13,7 +13,6 @@ public:
 
   void msToSamps(float delayMS);
 
-
   float getDistance();
 
 private:

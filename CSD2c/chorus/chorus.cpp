@@ -3,6 +3,9 @@
 Chorus::Chorus(int size, float delayMS, float feedback) :
   AudioEffect(), size(size), write(0), read(size - numsamples), feedback(feedback)
 {
+
+  msToSamps(delayMS);
+
   buffer = new float[size];
   for(int i = 0; i < size; i++) {
     buffer[i] = 0;
