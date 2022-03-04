@@ -97,8 +97,8 @@ wave.plot_waveshaper();
     for(unsigned int x=0; x<chunksize; x++)
     {
 
-      float amp_left=0.5;
-      float amp_right=0.5;
+      float amp_left=0.2;
+      float amp_right=0.2;
 
       outbuffer[2*x] = amp_left * wave.interpolation(inbuffer[x]);
       outbuffer[2*x+1] = amp_right * wave.interpolation(inbuffer[x]);

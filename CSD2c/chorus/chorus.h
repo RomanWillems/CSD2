@@ -1,6 +1,8 @@
 #pragma once
 #include "audioEffect.h"
 
+typedef unsigned int uint;
+
 class Chorus : public AudioEffect
 {
 public:
@@ -9,13 +11,16 @@ public:
 
   void applyEffect(float &input, float& output) override;
 
+  void msToSamps(float delayMS);
+
 private:
   int size;
   float* buffer;
+  int numsamples;
 
   int write;
   int read;
   float feedback;
 
   inline float wrap(int place);
-}
+};
