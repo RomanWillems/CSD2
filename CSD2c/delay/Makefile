@@ -6,7 +6,7 @@ SRC_PROJECT = delay.cpp delay_main.cpp
 # the directory to the folder with the shared modules
 SHAREDCODE_PATH = ../../CSD2c/
 # the modules to include
-MODULES = sharedCode/oscillators sharedCode/utilities sharedCode/userInput audioEffect
+MODULES = sharedCode_stereo/oscillators sharedCode_stereo/utilities sharedCode/userInput audioEffect
 TARGET=example
 
 # append shared code path prefix to modules

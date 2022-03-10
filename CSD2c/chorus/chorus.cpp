@@ -20,13 +20,25 @@ Chorus::~Chorus()
 
 void Chorus::applyEffect(float& input, float& output)
 {
+
+  //TODO DOESNT WORK YET BUSS ERROR
+  modSignal = osc->genNextSample() * modDepth;
+  delayTimeSamples = modSignal + offset;
+  read_mod = write - delayTimeSamples;
+  read = read_mod;
+  readNext = readNext + 1;
+
+  read_dec = read_mod - read;
+
+  wrap(read);
+  wrap(readNext);
+
   //read value from circular buffer
-  output = buffer[read++];
-  read = wrap(read);
+  output = linMap(read_dec, 0, 1, buffer[read], buffer[readNext]);
 
   //write goes through buffer and writes a sample;
   buffer[write++] = input + (output * feedback);
-  write = wrap(write);
+  wrap(write);
 
 }
 

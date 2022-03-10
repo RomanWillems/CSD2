@@ -28,3 +28,10 @@ void AudioEffect::setDryWet(float newDryWet)
   //std::cout << "newDryWet = " << newDryWet << std::endl;
   wetDry = 1.0f - newDryWet;
 }
+
+float AudioEffect::linMap(float input, int x1, int x2, float min, float max)
+{
+  // STARTING AT A X VALUE
+    float value = (min * (x2 - input) + max * (input - x1)) / (x2 - x1);
+    return value;
+}

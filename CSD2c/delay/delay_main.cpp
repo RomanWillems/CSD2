@@ -1,118 +1,149 @@
+/**********************************************************************
+*          Copyright (c) 2022, Hogeschool voor de Kunsten Utrecht
+*                      Hilversum, the Netherlands
+*                          All rights reserved
+***********************************************************************
+*  This program is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program.
+*  If not, see <http://www.gnu.org/licenses/>.
+***********************************************************************
+*
+*  File name     : panning.cpp
+*  System name   : jack_module
+*
+*  Description   : example of stereo panning where a mono input signal is
+*                    amplitude-panned between left and right outputs
+*
+*
+*  Author        : Marc_G
+*  E-mail        : marc.groenewegen@hku.nl
+*
+**********************************************************************/
+
 #include <iostream>
+#include <string>
+#include <math.h>
 #include <thread>
+#include <unistd.h> // sleep
 #include "jack_module.h"
-#include "math.h"
-#include "writeToFile.h"
+#include "keypress.h"
+#include "bufferDebugger.h"
+
 #include "delay.h"
-#include "sine.h"
-#include "audioEffect.h"
-#include "userInput.h"
-
-/*
- * NOTE: jack2 needs to be installed
- * jackd invokes the JACK audio server daemon
- * https://github.com/jackaudio/jackaudio.github.com/wiki/jackd(1)
- * on mac, you can start the jack audio server daemon in the terminal:
- * jackd -d coreaudio
- */
-
-#define WRITE_TO_FILE 0
-#define WRITE_NUM_SAMPLES 44100
-
-int main(int argc,char **argv)
-{
-
-  // create a JackModule instance
-  JackModule jack;
-
-  // init the jack, use program name as JACK client name
-  jack.init(argv[0]);
-  float samplerate = jack.getSamplerate();
-  //float amplitude = 0.5;
-
-  //create a userInput instance
-  UserInput userInput;
-
-  //select feedback2
-  std::cout << "Set your delay in MS in range [0,1000].\n";
-  float u_delayMS = userInput.retrieveValueRange(0, 1000);
-  std::cout << "--------------------------------------------------\n";
-
-  //select feedback
-  std::cout << "Set your feedback in range [0,1].\n";
-  float u_feedback = userInput.retrieveValueRange(0, 1);
-  std::cout << "--------------------------------------------------\n";
-
-  //select dryWet
-  std::cout << "Set your dryWet in range [0,1].\n";
-  float u_dryWet = userInput.retrieveValueRange(0, 1);
-  std::cout << "--------------------------------------------------\n";
-
-  // instantiate delay effect
-  // delay(Max size, numsamples, feedback)
-  Delay delay(samplerate, u_delayMS, u_feedback);
-  delay.setDryWet(u_dryWet);
 
 
+unsigned long chunksize=256;
+
+JackModule jack;
+unsigned long samplerate=44100; // default
+
+bool running=true;
 
 
-#if WRITE_TO_FILE
-  WriteToFile fileWriter("output.csv", true);
-  // assign a function to the JackModule::onProces
-  jack.onProcess = [ &delay, &fileWriter](jack_default_audio_sample_t* inBuf,
-    jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
-#else
-  // assign a function to the JackModule::onProces
-  jack.onProcess = [&delay](jack_default_audio_sample_t* inBuf,
-    jack_default_audio_sample_t* outBuf, jack_nframes_t nframes) {
-#endif
-    for(unsigned int i = 0; i < nframes; i++) {
+float totaal;
+int number_ints = 1000; //3000 - -3000
 
-      delay.processFrame(inBuf[i], outBuf[i]);
-      //outBuf[i] = inBuf[i] * amplitude;
-
-      // ----- write result to file -----
-#if WRITE_TO_FILE
-      static int count = 0;
-      if(count < WRITE_NUM_SAMPLES) {
-        fileWriter.write(std::to_string(outBuf[i]) + "\n");
-      } else {
-        // log 'Done' message to console, only once
-        static bool loggedDone = false;
-        if(!loggedDone) {
-          std::cout << "\n**** DONE **** \n"
-            << "Output is written to file.\n"
-            << "Please enter 'q' to quit the program." << std::endl;
-          loggedDone = true;
-        }
-      }
-      count++;
-      // set output to 0 to prevent issues with output
-      outBuf[i] = 0;
-#endif
-    }
-
-    return 0;
-  };
-
-  jack.autoConnect();
-
-  //keep the program running and listen for user input, q = quit
-  std::cout << "\n\nPress 'q' when you want to quit the program.\n";
-  // boolean is used to keep program running / turn it off
-  bool running = true;
-  while (running)
-  {
-    switch (std::cin.get())
-    {
-      case 'q':
-        running = false;
-        jack.end();
-        break;
+void job_1(){
+      for (int i = 0; i< number_ints; i++){
+          totaal++;
       }
   }
 
-  //end the program
-  return 0;
+void job_2(){
+    for (int i = 0; i< number_ints; i++){
+          totaal--;
+      }
+  }
 
+static void filter(){
+
+  float *inbuffer = new float[chunksize];
+  float *outbuffer = new float[chunksize*2];
+
+
+
+  //chorus(size, ms, feedback)
+  Delay delayL(samplerate, 100, 0.5);
+  delayL.setDryWet(0.7);
+
+  Delay delayR(samplerate, 200, 0.8);
+  delayR.setDryWet(0.7);
+
+//   for(int i = 0; i < BUFFERSIZE; i++){
+//     std::thread thread_1(job_1);
+//     std::thread thread_2(job_2);
+//
+//     thread_1.join();
+//     thread_2.join();
+// }
+    //
+    // std::cout << "\n***** DONE ***** "
+    // << "\nOutput is written to file output.csv" << std::endl;
+
+  do {
+    jack.readSamples(inbuffer,chunksize);
+
+    for(unsigned int x=0; x<chunksize; x++)
+    {
+
+      // float amp_left=0.2;
+      // float amp_right=0.2;
+
+      delayL.processFrame(inbuffer[x], outbuffer[2*x]);
+      delayR.processFrame(inbuffer[x], outbuffer[2*x+1]);
+    }
+
+    jack.writeSamples(outbuffer,chunksize*2);
+
+  } while(running);
+
+} // filter()
+
+
+
+int main(int argc,char **argv){
+
+
+
+char command='@';
+  jack.setNumberOfInputChannels(1);
+  // jack.setNumberOfOutputChannels(2);
+  jack.init(argv[0]); // use program name as JACK client name
+  jack.autoConnect();
+  samplerate=jack.getSamplerate();
+  std::cerr << "Samplerate: " << samplerate << std::endl;
+
+  std::thread filterThread(filter);
+
+  while(command != 'q')
+  {
+    if(keypressed()) {
+      command = getchar();
+
+      if(command == '+' || command == '=') {
+        std::cout << "hoi je klikt plus =" << std::endl;
+      };
+      if(command == '-'){
+        std::cout << "hoi je klikt = -" << std::endl;
+      };
+    }
+    usleep(100000);
+  }
+
+  running=false;
+  filterThread.join();
+
+  jack.end();
+
+  return 0;
 } // main()

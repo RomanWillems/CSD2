@@ -1,0 +1,23 @@
+// ModDelay is a derived class from Delay 
+// Effect <-- Delay <-- ModDelay
+
+void ModDelay::applyEffect(float& input, float& output)
+{
+  modSignal = osc->getNextSample() * modDepth;  // float
+  delayTimeSamples = modSignal + offset; // float
+  read_H_fp = (float) writeH - delayTimeSamples; // float
+  readH = (int) read_H_fp; // int
+  readHNext = readHNext + 1;
+  // get decimal value
+  read_h_dec = read_H_fp - read_H; // float
+  // wrap heads
+  wrapH(readH);
+  wrapH(readHNext);
+
+  output = linMap(read_h_dec, buffer[readH], buffer[readHNext]);
+
+  // write value to circular buffer
+  buffer[writeH++] = output * feedback + input;
+
+  wrapH(m_writeH);
+}

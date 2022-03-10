@@ -16,6 +16,8 @@ public:
   float getSample();
 
   void setDryWet(float newDryWet);
+  float linMap(float input, int x1, int x2, float min, float max);
+
 
   //Samplerate
 
