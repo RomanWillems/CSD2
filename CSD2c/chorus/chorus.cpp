@@ -1,13 +1,14 @@
 #include "chorus.h"
 
-Chorus::Chorus(int size, float delayMS, float feedback) :
-  AudioEffect()
+Chorus::Chorus(int samplerate, float feedback) :
+  AudioEffect(), feedback(feedback)
 {
 
-  msToSamps(delayMS);
+  int numSamples = msToSamps(delayMS);
+  this->numSamples = numSamples;
 
-  osc = new Sine(0.2, samplerate);
-  circ = new CircBuffer(size, numSamples);
+  osc = new Sine(3, samplerate);
+  circ = new CircBuffer(samplerate, numSamples);
 }
 
 Chorus::~Chorus()
@@ -18,21 +19,22 @@ Chorus::~Chorus()
   circ = nullptr;
 }
 
-float Chorus::applyEffect(float input)
+void Chorus::applyEffect(float &input, float &output)
 {
   float modFrequency = ((osc->genNextSample()+1)*200);
-  int mod = (int)modFrequency;
 
-  circ->setReadIndex(mod);
-  circ->write(input);
+  circ->setReadIndex(modFrequency);
+  circ->write(input + (output * feedback));
 
-  output = circ->read();
-  osc->genNextSample();
-  return output;
+  output = input + modulation;
+
+  float interpol = circ->read() - circ->readNext();
+  modulation = linMap(interpol, 0, 1, circ->read(), circ->readNext());
+
 }
 
-void Chorus::msToSamps(float delayMS)
+void Chorus::setDelayMS(float delayMS)
 {
-  numSamples = (delayMS * (samplerate / 1000.0) + 0.5);
-  circ->setNumSampsDelay(numSamples);
+  int delaySamps = msToSamps(delayMS);
+  circ->setReadIndex(delaySamps);
 }

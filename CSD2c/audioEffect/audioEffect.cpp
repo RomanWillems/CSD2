@@ -11,9 +11,8 @@ AudioEffect::~AudioEffect()
 void AudioEffect::processFrame(float& input, float& output)
 {
   //apply the virtual effect from effect class (tremolo, delay etc..)
-  applyEffect(input);
+  applyEffect(input, output);
   output = input * wetDry + output * dryWet;
-  lastSample = output;
   //std::cout << "wetDry = " << dryWet << std::endl;
 }
 
@@ -34,4 +33,9 @@ float AudioEffect::linMap(float input, int x1, int x2, float min, float max)
   // STARTING AT A X VALUE
     float value = (min * (x2 - input) + max * (input - x1)) / (x2 - x1);
     return value;
+}
+
+int AudioEffect::msToSamps(float ms)
+{
+  return int((ms * (samplerate / 1000.0)) + 0.5);
 }

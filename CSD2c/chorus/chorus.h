@@ -9,12 +9,12 @@ typedef unsigned int uint;
 class Chorus : public AudioEffect
 {
 public:
-  Chorus(int size, float delayMs, float feedback);
+  Chorus(int samplerate, float feedback);
   ~Chorus();
 
-  float applyEffect(float input) override;
+  void applyEffect(float& input, float &ouput) override;
 
-  void msToSamps(float delayMS);
+  void setDelayMS(float delayMS);
 
 
 protected:
@@ -24,7 +24,9 @@ protected:
 private:
 
   int numSamples;
-  float output;
+  float feedback;
+  float modulation;
+  int delayMS;
 
 
 

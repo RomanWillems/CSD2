@@ -18,12 +18,13 @@ public:
 
   void setDryWet(float newDryWet);
   float linMap(float input, int x1, int x2, float min, float max);
+  int msToSamps(float ms);
 
 
   //Samplerate
 
 protected:
-  virtual float applyEffect(float input) = 0;
+  virtual void applyEffect(float& input, float& output) = 0;
 
 public:
   float delaySamps;

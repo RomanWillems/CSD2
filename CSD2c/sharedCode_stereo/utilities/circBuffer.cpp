@@ -42,15 +42,16 @@ float CircBuffer::read()
     return value;
 }
 
+float CircBuffer::readNext()
+{
+    int readNext = readH + 1;
+    float value = buffer[readNext++];
+    readH = wrap(readNext);
+    return value;
+}
+
 int CircBuffer::wrap(int head)
 {
     if(head >= size) head -= size;
     return head;
-}
-
-void CircBuffer::setNumSampsDelay(float delayInSamps)
-{
-  this->numSampsDelay = floor(delayInSamps);
-  this->readH = writeH - numSampsDelay + size;
-  readH = wrap(readH);
 }

@@ -11,7 +11,7 @@ public:
     void setReadIndex(int numSampsDelay);
     void write(float value);
     float read();
-    void setNumSampsDelay(float delayInSamps);
+    float readNext();
 
 private:
     int wrap(int head);

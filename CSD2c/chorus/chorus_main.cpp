@@ -69,12 +69,12 @@ static void filter(){
   float *outbuffer = new float[chunksize*2];
 
 
-  //chorus(size, ms, feedback)
-  Chorus chorusL(samplerate, 0, 0.5);
-  chorusL.setDryWet(0.7);
+  //chorus(size, feedback)
+  Chorus chorusL(samplerate, 0.5);
+  chorusL.setDryWet(0.5);
 
-  Chorus chorusR(samplerate, 0, 0.8);
-  chorusR.setDryWet(0.7);
+  Chorus chorusR(samplerate, 0.5);
+  chorusR.setDryWet(0.5);
 
   do {
     jack.readSamples(inbuffer,chunksize);
@@ -92,6 +92,32 @@ static void filter(){
   } while(running);
 
 }
+
+// dit doet het niet en bovenstaand wel: checken!
+
+// //chorus(size, feedback)
+// AudioEffect* effectL = new Chorus(samplerate, 0.5);
+// effectL->setDryWet(0.5);
+//
+// AudioEffect* effectR = new Chorus(samplerate, 0.5);
+// effectR->setDryWet(0.5);
+//
+// do {
+//   jack.readSamples(inbuffer,chunksize);
+//
+//   for(unsigned int x=0; x<chunksize; x++)
+//   {
+//
+//
+//     effectL->processFrame(inbuffer[x], outbuffer[2*x]);
+//     effectR->processFrame(inbuffer[x], outbuffer[2*x+1]);
+//   }
+//
+//   jack.writeSamples(outbuffer,chunksize*2);
+//
+// } while(running);
+//
+// }
 
 
 
