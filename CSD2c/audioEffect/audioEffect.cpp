@@ -11,7 +11,7 @@ AudioEffect::~AudioEffect()
 void AudioEffect::processFrame(float& input, float& output)
 {
   //apply the virtual effect from effect class (tremolo, delay etc..)
-  applyEffect(input, output);
+  applyEffect(input);
   output = input * wetDry + output * dryWet;
   lastSample = output;
   //std::cout << "wetDry = " << dryWet << std::endl;

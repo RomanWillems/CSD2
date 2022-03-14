@@ -2,6 +2,7 @@
 #include "audioEffect.h"
 #include "oscillator.h"
 #include "sine.h"
+#include "circBuffer.h"
 
 typedef unsigned int uint;
 
@@ -11,29 +12,20 @@ public:
   Chorus(int size, float delayMs, float feedback);
   ~Chorus();
 
-  void applyEffect(float &input, float& output) override;
+  float applyEffect(float input) override;
 
   void msToSamps(float delayMS);
 
+
 protected:
   Oscillator* osc;
+  CircBuffer* circ;
 
 private:
-  float modDepth = 1;
-  int size;
-  float* buffer;
-  int numsamples = 0;
-  float offset = 0;
-  float delayTimeSamples;
-  float modSignal;
-  float read_mod;
-  int readNext;
-  float read_dec;
+
+  int numSamples;
+  float output;
 
 
-  int write;
-  int read;
-  float feedback;
 
-  inline float wrap(int place);
 };

@@ -1,19 +1,19 @@
 #include "circBuffer.h"
 
-CircBuffer::CircBuffer(int size, int numSampleDelay) :
-    read(0), write(0)
+CircBuffer::CircBuffer(int size, int numSampsDelay) :
+    readH(0), writeH(0)
 {
     if(numSampleDelay > size){
         throw ("CircBuffer::CircBuffer exceed size.")
     }
 
     this -> size = size;
-    this -> numSampleDelay = numSampleDelay;
+    this -> numSampsDelay = numSampsDelay;
 
     //initialize buffer array
     buffer = new float[size];
 
-    setReadIndex(numSampleDelay);
+    setReadIndex(numSampsDelay);
 }
 
 CircBuffer::~CircBuffer()
@@ -22,26 +22,34 @@ CircBuffer::~CircBuffer()
     buffer = nullptr;
 }
 
-void CircBuffer::setReadIndex(int numSampleDelay)
+void CircBuffer::setReadIndex(int numSampsDelay)
 {
-  read = write - numSampleDelay + size;
-  read = wrap(read)
+  readH = writeH - numSampleDelay + size;
+  readH = wrap(readH)
 }
 
 void CircBuffer::write(float Value)
 {
-    buffer[writeH++] = value;
-    writeH = wrapH(writeH);
+    buffer[write++] = value;
+    writeH = wrap(writeH);
 }
 
 float CircBuffer::read()
 {
-    float value = buffer[read++];
-    read = wrapH(read);
+    float value = buffer[readH++];
+    readH = wrap(readH);
     return value;
 }
 
-int circBuffer::wrap()
+int CircBuffer::wrap(int head)
 {
     if(head >= size) head -= size;
     return head;
+}
+
+void CircBuffer::setNumSampsDelay(float delayInSamps)
+{
+  this->numSampsDelay = floor(delayInSamps);
+  this->readH = writeH - numSampsDelay + size;
+  readH = wrap(readH);
+}

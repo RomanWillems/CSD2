@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "oscillator.h"
+#include "circBuffer.h"
 
 class AudioEffect
 {
@@ -22,7 +23,7 @@ public:
   //Samplerate
 
 protected:
-  virtual void applyEffect(float& input, float& output) = 0;
+  virtual float applyEffect(float input) = 0;
 
 public:
   float delaySamps;

@@ -5,20 +5,20 @@
 
 class CircBuffer {
 public:
-    CircBuffer(int size, int numSampleDelay);
+    CircBuffer(int size, int numSampsDelay);
     ~CircBuffer();
 
     void setReadIndex(int numSampsDelay);
     void write(float value);
     float read();
+    void setNumSampsDelay(float delayInSamps);
 
 private:
-    int wrap();
-    int getDistanceRW();
-    int readH = size - numSamplesDelay;
-    int writeH = 0;
+    int wrap(int head);
+    int readH;
+    int writeH;
     int size;
     int numSampsDelay;
-    float* buffer[4] = {0,0,0,0};
+    float* buffer = nullptr;
 
 };
