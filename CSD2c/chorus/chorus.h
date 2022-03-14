@@ -1,6 +1,7 @@
 #pragma once
 #include "audioEffect.h"
 #include "oscillator.h"
+#include "sine.h"
 
 typedef unsigned int uint;
 
@@ -18,7 +19,7 @@ protected:
   Oscillator* osc;
 
 private:
-  float modDepth = 0.5;
+  float modDepth = 1;
   int size;
   float* buffer;
   int numsamples = 0;

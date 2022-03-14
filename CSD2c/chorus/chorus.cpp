@@ -1,10 +1,12 @@
 #include "chorus.h"
 
 Chorus::Chorus(int size, float delayMS, float feedback) :
-  AudioEffect(), size(size), write(0), read(size - numsamples), feedback(feedback)
+  AudioEffect(), size(size), feedback(feedback)
 {
 
   msToSamps(delayMS);
+
+  osc = new Sine(0.2, samplerate);
 
   buffer = new float[size];
   for(int i = 0; i < size; i++) {
@@ -21,8 +23,7 @@ Chorus::~Chorus()
 void Chorus::applyEffect(float& input, float& output)
 {
 
-  //TODO DOESNT WORK YET BUSS ERROR
-  modSignal = osc->genNextSample() * modDepth;
+  modSignal = (osc->genNextSample() + 1 * 0.5) * modDepth;
   delayTimeSamples = modSignal + offset;
   read_mod = write - delayTimeSamples;
   read = read_mod;
@@ -30,8 +31,8 @@ void Chorus::applyEffect(float& input, float& output)
 
   read_dec = read_mod - read;
 
-  wrap(read);
-  wrap(readNext);
+  read = wrap(read);
+  readNext = wrap(readNext);
 
   //read value from circular buffer
   output = linMap(read_dec, 0, 1, buffer[read], buffer[readNext]);

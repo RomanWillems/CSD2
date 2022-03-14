@@ -38,7 +38,6 @@
 #include "jack_module.h"
 #include "keypress.h"
 #include "bufferDebugger.h"
-
 #include "chorus.h"
 
 
@@ -58,7 +57,6 @@ void job_1(){
           totaal++;
       }
   }
-
 void job_2(){
     for (int i = 0; i< number_ints; i++){
           totaal--;
@@ -72,22 +70,11 @@ static void filter(){
 
 
   //chorus(size, ms, feedback)
-  Chorus chorusL(samplerate, 100, 0.5);
+  Chorus chorusL(samplerate, 0, 0.5);
   chorusL.setDryWet(0.7);
 
-  Chorus chorusR(samplerate, 200, 0.8);
+  Chorus chorusR(samplerate, 0, 0.8);
   chorusR.setDryWet(0.7);
-
-//   for(int i = 0; i < BUFFERSIZE; i++){
-//     std::thread thread_1(job_1);
-//     std::thread thread_2(job_2);
-//
-//     thread_1.join();
-//     thread_2.join();
-// }
-    //
-    // std::cout << "\n***** DONE ***** "
-    // << "\nOutput is written to file output.csv" << std::endl;
 
   do {
     jack.readSamples(inbuffer,chunksize);
@@ -95,8 +82,6 @@ static void filter(){
     for(unsigned int x=0; x<chunksize; x++)
     {
 
-      // float amp_left=0.2;
-      // float amp_right=0.2;
 
       chorusL.processFrame(inbuffer[x], outbuffer[2*x]);
       chorusR.processFrame(inbuffer[x], outbuffer[2*x+1]);
@@ -106,7 +91,7 @@ static void filter(){
 
   } while(running);
 
-} // filter()
+}
 
 
 
