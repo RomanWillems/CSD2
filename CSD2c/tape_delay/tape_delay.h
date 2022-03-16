@@ -6,11 +6,11 @@
 
 typedef unsigned int uint;
 
-class Chorus : public AudioEffect
+class TapeDelay : public AudioEffect
 {
 public:
-  Chorus(int samplerate, float modDepth, int delayMS, float feedback, float modFrequency);
-  ~Chorus();
+  TapeDelay(int samplerate, int delayMS, float feedback, float modFrequency);
+  ~TapeDelay();
 
   void applyEffect(float& input, float &ouput) override;
 
@@ -21,13 +21,8 @@ protected:
   Oscillator* osc;
   CircBuffer* circ;
   int numSamples;
-  float modDepth;
   int delayMS;
   float feedback;
-  float modFrequency;
   float modulation;
-
-
-
 
 };

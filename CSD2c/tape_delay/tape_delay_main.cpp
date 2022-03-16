@@ -38,7 +38,7 @@
 #include "jack_module.h"
 #include "keypress.h"
 #include "bufferDebugger.h"
-#include "chorus.h"
+#include "tape_delay.h"
 
 
 unsigned long chunksize=256;
@@ -69,12 +69,12 @@ static void filter(){
   float *outbuffer = new float[chunksize*2];
 
 
-//chorus(size, modDepth, delayMS, feedback, modFrequency)
-AudioEffect* effectL = new Chorus(samplerate, 0.5, 15, 0.2, 16);
-effectL->setDryWet(1);
+//TapeDelay(size,  delayMS, feedback, modFrequency)
+AudioEffect* effectL = new TapeDelay(samplerate, 200, 0.6, 0.2);
+effectL->setDryWet(0.8);
 
-AudioEffect* effectR = new Chorus(samplerate, 0.3, 20, 0.3, 20);
-effectR->setDryWet(1);
+AudioEffect* effectR = new TapeDelay(samplerate, 200, 0.6, 0.2);
+effectR->setDryWet(0.8);
 
 do {
   jack.readSamples(inbuffer,chunksize);

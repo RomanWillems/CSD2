@@ -1,7 +1,7 @@
-#include "chorus.h"
+#include "tape_delay.h"
 
-Chorus::Chorus(int samplerate, float modDepth, int delayMS, float feedback, float modFrequency) :
-  AudioEffect(), modDepth(modDepth), delayMS(delayMS), feedback(feedback), modFrequency(modFrequency)
+TapeDelay::TapeDelay(int samplerate, int delayMS, float feedback, float modFrequency) :
+  AudioEffect(),delayMS(delayMS), feedback(feedback)
 {
 
   int numSamples = msToSamps(delayMS);
@@ -11,7 +11,7 @@ Chorus::Chorus(int samplerate, float modDepth, int delayMS, float feedback, floa
   circ = new CircBuffer(samplerate, numSamples);
 }
 
-Chorus::~Chorus()
+TapeDelay::~TapeDelay()
 {
   delete osc;
   delete circ;
@@ -19,11 +19,13 @@ Chorus::~Chorus()
   circ = nullptr;
 }
 
-void Chorus::applyEffect(float &input, float &output)
+void TapeDelay::applyEffect(float &input, float &output)
 {
-  float modSig = (osc->genNextSample() + 5); //+ is middelpunt
-  setDelayMS(modSig * delayMS);
 
+  //TODO do something with de modSig so that the delayed samples are slightly off
+  float modSig = (osc->genNextSample() + 5);
+
+  setDelayMS(delayMS);
 
   output = input + modulation;
 
@@ -31,12 +33,11 @@ void Chorus::applyEffect(float &input, float &output)
 
   float interpol = circ->read() - circ->readNext();
   modulation = linMap(interpol, 0, 1, circ->read(), circ->readNext());
-  modulation *= modDepth;
-  modulation += 1.0 - modDepth;
+
 
 }
 
-void Chorus::setDelayMS(float delayMS)
+void TapeDelay::setDelayMS(float delayMS)
 {
   int delaySamps = msToSamps(delayMS);
   circ->setReadIndex(delaySamps);
