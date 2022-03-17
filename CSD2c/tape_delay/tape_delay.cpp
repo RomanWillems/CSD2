@@ -1,7 +1,8 @@
 #include "tape_delay.h"
 
-TapeDelay::TapeDelay(int samplerate, int delayMS, float feedback, float modFrequency) :
-  AudioEffect(),delayMS(delayMS), feedback(feedback)
+
+TapeDelay::TapeDelay(int samplerate, int delayMS, float feedback, float modFrequency, float drive) :
+  AudioEffect(),delayMS(delayMS), feedback(feedback), drive(drive)
 {
 
   int numSamples = msToSamps(delayMS);
@@ -25,10 +26,11 @@ void TapeDelay::applyEffect(float &input, float &output)
   //TODO do something with de modSig so that the delayed samples are slightly off
   float modSig = (osc->genNextSample() + 5);
 
-  setDelayMS(delayMS);
+  setDelayMS(delayMS + modSig);
 
   output = input + modulation;
 
+  input = tanh(input * drive);
   circ->write(input + (output * feedback));
 
   float interpol = circ->read() - circ->readNext();

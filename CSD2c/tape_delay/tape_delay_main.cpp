@@ -69,11 +69,11 @@ static void filter(){
   float *outbuffer = new float[chunksize*2];
 
 
-//TapeDelay(size,  delayMS, feedback, modFrequency)
-AudioEffect* effectL = new TapeDelay(samplerate, 200, 0.6, 0.2);
+//TapeDelay(size,  delayMS, feedback, modFrequency, drive)
+AudioEffect* effectL = new TapeDelay(samplerate, 400, 0.6, 2, 2);
 effectL->setDryWet(0.8);
 
-AudioEffect* effectR = new TapeDelay(samplerate, 200, 0.6, 0.2);
+AudioEffect* effectR = new TapeDelay(samplerate, 400, 0.6, 3, 2);
 effectR->setDryWet(0.8);
 
 do {
