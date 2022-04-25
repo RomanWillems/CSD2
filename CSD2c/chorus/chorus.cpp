@@ -21,7 +21,7 @@ Chorus::~Chorus()
 
 void Chorus::applyEffect(float &input, float &output)
 {
-  float modSig = (osc->genNextSample() + 5); //+ is middelpunt
+  float modSig = ((osc->genNextSample() +1) * 10 * modDepth); //+ is middelpunt
   setDelayMS(modSig * delayMS);
 
 
@@ -31,8 +31,8 @@ void Chorus::applyEffect(float &input, float &output)
 
   float interpol = circ->read() - circ->readNext();
   modulation = linMap(interpol, 0, 1, circ->read(), circ->readNext());
-  modulation *= modDepth;
-  modulation += 1.0 - modDepth;
+  // modulation *= modDepth;
+  // modulation += 1.0 - modDepth;
 
 }
 

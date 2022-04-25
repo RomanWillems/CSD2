@@ -70,11 +70,11 @@ static void filter(){
 
 
 //TapeDelay(size,  delayMS, feedback, modFrequency, drive)
-AudioEffect* effectL = new TapeDelay(samplerate, 400, 0.6, 2, 2);
-effectL->setDryWet(0.8);
+AudioEffect* effectL = new TapeDelay(samplerate, 500, 0.3, 3, 3);
+effectL->setDryWet(0.5);
 
-AudioEffect* effectR = new TapeDelay(samplerate, 400, 0.6, 3, 2);
-effectR->setDryWet(0.8);
+AudioEffect* effectR = new TapeDelay(samplerate, 500, 0.3, 5, 3);
+effectR->setDryWet(0.5);
 
 do {
   jack.readSamples(inbuffer,chunksize);

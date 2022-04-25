@@ -29,19 +29,22 @@ void CircBuffer::setReadIndex(int numSampsDelay)
   readH = wrap(readH);
 }
 
+
+//write samples
 void CircBuffer::write(float value)
 {
     buffer[writeH++] = value;
     writeH = wrap(writeH);
 }
 
+//read samples
 float CircBuffer::read()
 {
     float value = buffer[readH++];
     readH = wrap(readH);
     return value;
 }
-
+//read next sample to interpolate
 float CircBuffer::readNext()
 {
     int readNext = readH + 1;
@@ -50,6 +53,7 @@ float CircBuffer::readNext()
     return value;
 }
 
+//wrap function
 int CircBuffer::wrap(int head)
 {
     if(head >= size) head -= size;

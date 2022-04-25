@@ -74,7 +74,8 @@ static void filter(){
 
   WaveShaper wave(BUFFERSIZE);
   // wave.genWaveshape(10.0);
-  wave.genWaveShapeOscillator(WaveShaper::waveForm::SINE, 10);
+  //waveShaper(form, fq)
+  wave.genWaveShapeOscillator(WaveShaper::waveForm::SINE, 20);
 
   for(int i = 0; i < BUFFERSIZE; i++){
     std::thread thread_1(job_1);

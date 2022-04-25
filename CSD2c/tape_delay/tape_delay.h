@@ -21,11 +21,13 @@ public:
 
 protected:
   Oscillator* osc;
+  Oscillator* oscFilter;
   CircBuffer* circ;
   int numSamples;
   int delayMS;
   float feedback;
   float drive;
   float modulation;
+  float lastSample = 0;
 
 };

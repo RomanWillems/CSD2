@@ -70,10 +70,10 @@ static void filter(){
 
 
 //chorus(size, modDepth, delayMS, feedback, modFrequency)
-AudioEffect* effectL = new Chorus(samplerate, 0.5, 15, 0.2, 16);
+AudioEffect* effectL = new Chorus(samplerate, 0.5, 5, 0.2, 0.5);
 effectL->setDryWet(1);
 
-AudioEffect* effectR = new Chorus(samplerate, 0.3, 20, 0.3, 20);
+AudioEffect* effectR = new Chorus(samplerate, 0.3, 10, 0.3, 0.7);
 effectR->setDryWet(1);
 
 do {
