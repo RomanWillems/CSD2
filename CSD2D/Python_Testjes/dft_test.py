@@ -19,7 +19,7 @@ t = np.arange(0,1,ts)
 #make sine's and add up to x
 # x = amp * sine(2pi*frequency*time)
 freq = 1.
-x = 3*np.sin(2*np.pi*freq*t)
+x = 5 * np.sin(2*np.pi*freq*t)
 
 freq = 4
 x += np.sin(2*np.pi*freq*t)
