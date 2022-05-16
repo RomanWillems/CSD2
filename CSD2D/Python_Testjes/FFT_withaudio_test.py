@@ -43,5 +43,10 @@ yf[target_idx - 1 : target_idx + 2] = 0
 #inverse fft
 new_sig = irfft(yf)
 
+#normalize new signal
+norm_new_sig = np.int16(new_sig * (32767 / new_sig.max()))
+
+write("clean.wav", SAMPLE_RATE, norm_new_sig)
+
 plt.plot(new_sig[:1000])
 plt.show()

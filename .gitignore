@@ -3,7 +3,8 @@
 
 #get rid of .o
 
-*.o 
+*.o
 *.pages
 *.csv
 *.png
+*.wav
