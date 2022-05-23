@@ -1,41 +1,50 @@
+import os
+import sys
 import numpy as np
-from matplotlib import pyplot as plt
+from scipy.signal import get_window
+from scipy.fftpack import fft,ifft
+from scipy.io.wavfile import read
 from scipy.io.wavfile import write
-from scipy.fft import fft, fftfreq
-from scipy.fft import rfft, rfftfreq
-from scipy.fft import irfft
+import matplotlib.pyplot as plt
+import math
+import random
 
 SAMPLE_RATE = 44100 #hz
-DURATION = 5 #seconds
+
+def fft(infile, outfile):
+
+    NT16_FAC = (2**15)-1
+    INT32_FAC = (2**31)-1
+    INT64_FAC = (2**63)-1
+    norm_fact = {'int16':INT16_FAC, 'int32':INT32_FAC, 'int64':INT64_FAC,'float32':1.0,'float64':1.0}
+
+    #TODO:
+    # read input file and if necessary, convert it to mono
+    (fs,x) = read(infile)
+    #print x.shape
+    # take only first (mono) channel
+    x=x[:,0]
+    #print x.shape
+    x = np.float32(x)/norm_fact[x.dtype.name]
+    plt.plot(x[:200])
+    plt.show()
 
 #TODO:
-# READ WAV file
 # FFT ON WAV FILE
+
+#TODO:
 # RFFT ON WAV FILE
+
+#TODO:
 # WRITE AND PLOT WAV FILE
 
-# Number of samples in normalized_tone
-N = SAMPLE_RATE * DURATION
-
-yf = rfft(normalized_sine)
-xf = rfftfreq(N, 1 / SAMPLE_RATE)
-
-# The maximum frequency is half the sample rate (nyquist)
-points_per_freq = len(xf) / (SAMPLE_RATE / 2)
-
-# Target frequency is 4000 Hz
-target_freq = int(points_per_freq * 4000)
-
-yf[target_freq - 1 : target_freq + 2] = 0
-
-#inverse fft
-new_sig = irfft(yf)
-
-#normalize new signal
-norm_new_sig = np.int16(new_sig * (32767 / new_sig.max()))
-
-write("clean.wav", SAMPLE_RATE, norm_new_sig)
-
-#plot only first 1000 samples
-plt.plot(new_sig[:1000])
-plt.show()
+if __name__ == '__main__':
+  if len(sys.argv) < 2:
+    print("Please enter input filename")
+    sys.exit()
+  infile=sys.argv[1]
+  basename=os.path.splitext(sys.argv[1])[0]
+  extension=os.path.splitext(sys.argv[1])[1]
+  outfile=basename + "_out" + extension
+  print(outfile)
+  fft(infile,outfile)

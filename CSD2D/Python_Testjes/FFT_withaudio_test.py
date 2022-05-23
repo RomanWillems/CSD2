@@ -1,54 +1,74 @@
 import numpy as np
+import sys
+import os
 from matplotlib import pyplot as plt
-from scipy.io.wavfile import write
 from scipy.fft import fft, fftfreq
 from scipy.fft import rfft, rfftfreq
 from scipy.fft import irfft
+from scipy.io.wavfile import read
+from scipy.io.wavfile import write
 
 SAMPLE_RATE = 44100 #hz
-DURATION = 5 #seconds
 
-def gen_sine_wave(freq, sample_rate, duration):
-    x = np.linspace(0, duration, sample_rate * duration, endpoint=False)
-    frequencies = x * freq
-    #2pi np.sin takes radians
-    y = np.sin((2 * np.pi) * frequencies)
-    return x, y
+def do_fft(infile,outfile):
 
-#generate a 2 hz sine wave that lasts for 5 seconds
-_, sin1 = gen_sine_wave(400, SAMPLE_RATE, DURATION)
-_, sin2 = gen_sine_wave(4000, SAMPLE_RATE, DURATION)
-sin2 = sin2 * 0.3
-sin_mixed = sin1 + sin2
+    #read input file
+    (samplerate, input_data) = read(infile)
+    print("samplerate =", samplerate)
+    #make mono
+    input_data=input_data[:,0]
+    #normalize x en set to 16bit integer
+    input_data= np.int16((input_data/ input_data.max()) * 32767)
 
-#normalize and set to 16bit integer
-#for storaging audio later
-normalized_sine = np.int16((sin_mixed / sin_mixed.max()) * 32767)
+    length = input_data.shape[0] / samplerate
 
-write("mysinewave.wav", SAMPLE_RATE, normalized_sine)
+    # Number of samples in normalized_tone
+    N = samplerate * length
+    print("N=", N)
 
-# Number of samples in normalized_tone
-N = SAMPLE_RATE * DURATION
+    yf = rfft(input_data)
+    xf = rfftfreq(int(N), 1 / samplerate)
 
-yf = rfft(normalized_sine)
-xf = rfftfreq(N, 1 / SAMPLE_RATE)
+    #decompose spectrum
+    YMag=abs(yf)
+    YPhase=np.angle(yf)
 
-# The maximum frequency is half the sample rate (nyquist)
-points_per_freq = len(xf) / (SAMPLE_RATE / 2)
+    #set phase
+    YPhase = 10
 
-# Target frequency is 4000 Hz
-target_freq = int(points_per_freq * 4000)
+    # reconstruct spectrum
+    yf = YMag*(np.cos(YPhase) + 1j*np.sin(YPhase))
 
-yf[target_freq - 1 : target_freq + 2] = 0
+    plt.plot(xf, np.abs(yf))
+    plt.show()
 
-#inverse fft
-new_sig = irfft(yf)
+    output_data = irfft(yf)
 
-#normalize new signal
-norm_new_sig = np.int16(new_sig * (32767 / new_sig.max()))
+    #normalize new signal
+    output_data = np.int16(output_data * (32767 / output_data.max()))
 
-write("clean.wav", SAMPLE_RATE, norm_new_sig)
+    write(outfile, samplerate, output_data)
 
-#plot only first 1000 samples
-plt.plot(new_sig[:1000])
-plt.show()
+
+
+
+
+    # reconstruct spectrum
+    # Y = YMag*(np.cos(YPhase) + 1j*np.sin(YPhase))
+
+    # The maximum frequency is half the sample rate (nyquist)
+    # points_per_freq = len(xf) / (samplerate / 2)
+    #
+    # # write the result
+    # write(outfile,samplerate,np.real(y))
+
+if __name__ == '__main__':
+  if len(sys.argv) < 2:
+    print("Please enter input filename")
+    sys.exit()
+  infile=sys.argv[1]
+  basename=os.path.splitext(sys.argv[1])[0]
+  extension=os.path.splitext(sys.argv[1])[1]
+  outfile=basename + "_out" + extension
+  print(outfile)
+  do_fft(infile,outfile)
