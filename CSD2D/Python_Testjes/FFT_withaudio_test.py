@@ -15,8 +15,8 @@ def do_fft(infile,outfile):
     #read input file
     (samplerate, input_data) = read(infile)
     print("samplerate =", samplerate)
-    #make mono
-    input_data=input_data[:,0]
+    # #make mono
+    # input_data=input_data[:,0]
     #normalize x en set to 16bit integer
     input_data= np.int16((input_data/ input_data.max()) * 32767)
 
@@ -32,10 +32,8 @@ def do_fft(infile,outfile):
     #decompose spectrum
     YMag=abs(yf)
     YPhase=np.angle(yf)
-
     #set phase
     YPhase = 10
-
     # reconstruct spectrum
     yf = YMag*(np.cos(YPhase) + 1j*np.sin(YPhase))
 
@@ -48,10 +46,6 @@ def do_fft(infile,outfile):
     output_data = np.int16(output_data * (32767 / output_data.max()))
 
     write(outfile, samplerate, output_data)
-
-
-
-
 
     # reconstruct spectrum
     # Y = YMag*(np.cos(YPhase) + 1j*np.sin(YPhase))
