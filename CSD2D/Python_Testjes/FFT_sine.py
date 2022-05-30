@@ -33,6 +33,9 @@ N = SAMPLE_RATE * DURATION
 yf = rfft(normalized_sine)
 xf = rfftfreq(N, 1 / SAMPLE_RATE)
 
+plt.plot(xf, np.abs(yf))
+plt.show()
+
 # The maximum frequency is half the sample rate (nyquist)
 points_per_freq = len(xf) / (SAMPLE_RATE / 2)
 
@@ -48,7 +51,7 @@ new_sig = irfft(yf)
 norm_new_sig = np.int16(new_sig * (32767 / new_sig.max()))
 
 write("clean.wav", SAMPLE_RATE, norm_new_sig)
-
-#plot only first 1000 samples
-plt.plot(new_sig[:1000])
-plt.show()
+#
+# #plot only first 1000 samples
+# plt.plot(new_sig[:1000])
+# plt.show()

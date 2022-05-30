@@ -10,13 +10,14 @@ from scipy.io.wavfile import write
 
 SAMPLE_RATE = 44100 #hz
 
+
 def do_fft(infile,outfile):
 
     #read input file
     (samplerate, input_data) = read(infile)
     print("samplerate =", samplerate)
     # #make mono
-    # input_data=input_data[:,0]
+    input_data=input_data[:,0]
     #normalize x en set to 16bit integer
     input_data= np.int16((input_data/ input_data.max()) * 32767)
 
@@ -29,13 +30,22 @@ def do_fft(infile,outfile):
     yf = rfft(input_data)
     xf = rfftfreq(int(N), 1 / samplerate)
 
-    #decompose spectrum
-    YMag=abs(yf)
-    YPhase=np.angle(yf)
-    #set phase
-    YPhase = 10
-    # reconstruct spectrum
-    yf = YMag*(np.cos(YPhase) + 1j*np.sin(YPhase))
+    # # # flip the frequencys
+    # yf = np.flip(yf)
+
+    # roll the frequencys ahead or back in the spectrum (only with full list)
+    yf = np.roll(yf, -20000)
+
+
+    print("yf =", yf)
+
+    # #decompose spectrum
+    # YMag=abs(yf)
+    # YPhase=np.angle(yf)
+    # #set phase
+    # YPhase = 0
+    # # reconstruct spectrum
+    # yf = YMag*(np.cos(YPhase) + 1j*np.sin(YPhase))
 
     plt.plot(xf, np.abs(yf))
     plt.show()

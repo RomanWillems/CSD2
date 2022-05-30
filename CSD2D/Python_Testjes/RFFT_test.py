@@ -12,13 +12,17 @@ import matplotlib.pyplot as plt
 import math
 import random
 
-SAMPLE_RATE = 44100 #hz
-DURATION = 1 #seconds
+#lijst van bins fq/bin amount.
+#ifft op die bins.
+#Pitch shifter.
+#Flippen.
+#Testen.
+SAMPLE_RATE = 44100
 
-#TODO:
-#FQ spectrum maken met 1 frequency en proberen de ifft daarvan te trekken door een sinus
-#te krijgen dan van een bepaald aantal hertz.
-
+DURATION = 1
+# TODO:
+# FQ spectrum maken met 1 frequency en proberen de ifft daarvan te trekken door een sinus
+# te krijgen dan van een bepaald aantal hertz.
 def gen_sine_wave(freq, sample_rate, duration):
     x = np.linspace(0, duration, sample_rate * duration, endpoint=False)
     frequencies = x * freq
@@ -35,22 +39,12 @@ N = SAMPLE_RATE * DURATION
 yf = rfft(sin1)
 xf = rfftfreq(N, 1 / SAMPLE_RATE)
 
+
+print("yf =", yf)
 plt.plot(xf, np.abs(yf))
 plt.show()
-
-# # Number of sample points
-# N = 5
-# # sample spacing
-# T = 1.0 / 800.0
-# x = np.linspace(0.0, N*T, N, endpoint=Fals)
-# y = np.sin(50.0 * 2.0*np.pi*x) + 0.5*np.sin(80.0 * 2.0*np.pi*x)
 #
-# yf = fft(y)
-# xf = fftfreq(N, T)[:N//2]
+# x = ifft(yf)
 #
-# print(yf)
-#
-# import matplotlib.pyplot as plt
-# plt.plot(xf, 2.0/N * np.abs(yf[0:N//2]))
-# plt.grid()
+# plt.plot(x[:100])
 # plt.show()
