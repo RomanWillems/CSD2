@@ -37,6 +37,11 @@ _, sin1 = gen_sine_wave(400, SAMPLE_RATE, DURATION)
 N = SAMPLE_RATE * DURATION
 
 yf = rfft(sin1)
+print("lengte lijst", len(yf))
+
+#make an complex array with a real and imaginary part complex(1, amp)
+#yf[positie]
+yf[2000] = complex(1, 20000)
 xf = rfftfreq(N, 1 / SAMPLE_RATE)
 
 
@@ -44,7 +49,7 @@ print("yf =", yf)
 plt.plot(xf, np.abs(yf))
 plt.show()
 #
-# x = ifft(yf)
+x = ifft(yf)
 #
-# plt.plot(x[:100])
-# plt.show()
+plt.plot(x[:100])
+plt.show()
