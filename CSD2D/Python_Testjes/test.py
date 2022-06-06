@@ -11,9 +11,24 @@ from scipy.fft import irfft
 import matplotlib.pyplot as plt
 import math
 import random
+import ephem
+import datetime
 
-#Make an empty array with the length of the NIQUIST * 2
-yf = [0]*int(NIQUIST + 1)
-#make an complex array with a real and imaginary part complex(1, amp)
-#yf[positie]
-yf[2000] = complex(1, 20000)
+# importing datetime module for now()
+import datetime
+
+# using now() to get current time
+current_time = datetime.datetime.now()
+
+utrecht = ephem.Observer()
+utrecht.lat = '52.092876'
+utrecht.lon = '5.104480'
+utrecht.date = current_time
+
+mars = ephem.Mars()
+mars.compute(utrecht)
+mars_altitude = mars.alt
+mars_azimut = mars.az
+
+print("mars_azimut =", mars_azimut + 0.0)
+print("mars_altitude =", mars_altitude + 0.0)
