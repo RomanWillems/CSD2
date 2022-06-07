@@ -34,7 +34,7 @@ mars_altitude = mars_altitude * 1000
 mars_altitude = int(mars_altitude)
 mars_altitude = abs(mars_altitude)
 
-mars_azimut = mars_azimut * 1000
+mars_azimut = mars_azimut * 100
 mars_azimut = int(mars_azimut)
 mars_azimut = abs(mars_azimut)
 
@@ -67,9 +67,9 @@ x = ifft(yf)
 
 #normalize new signal
 norm_x = np.int16(x * (32767 / x.max()))
-print("normx", norm_x)
+# print("normx", norm_x)
 
-write("Marrs.wav", SAMPLE_RATE, norm_x)
+write("Mars.wav", SAMPLE_RATE, norm_x)
 
 plt.plot(x[:1000])
 plt.show()
