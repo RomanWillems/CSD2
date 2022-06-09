@@ -32,11 +32,21 @@ N = SAMPLE_RATE * DURATION
 yf = [0]*int(NIQUIST + 1)
 #num = number of frequencies to draw
 
-num = 22
-for x in range(num):
-    #make an complex array with a real and imaginary part complex(1, amp)
-    #yf[frequency]
-    yf[random.randint(20, 100)] = complex(1, random.uniform(8))
+#alle afstanden van (2000tm2022/1/1) krijgen van gekozen planeet.
+
+year_time = 1999
+num_years = 23
+for x in range(num_years):
+    year_time += 1
+    mars = ephem.Mars(str(year_time))
+    print(str(year_time))
+    planet_distance = mars.earth_distance * ephem.meters_per_au / ephem.c
+    print("%.2f sec" % (planet_distance))
+    num = 22
+    for x in range(num):
+        #make an complex array with a real and imaginary part complex(1, amp)
+        #yf[frequency]
+        yf[int(planet_distance)] = complex(1, random.uniform(8))
 
 
 xf = rfftfreq(N, 1 / SAMPLE_RATE)
@@ -50,7 +60,7 @@ x = ifft(yf)
 norm_x = np.int16(x * (32767 / x.max()))
 # print("normx", norm_x)
 
-write("Test12.wav", SAMPLE_RATE, norm_x)
+write("Test122.wav", SAMPLE_RATE, norm_x)
 
 plt.plot(x[:1000])
 plt.show()

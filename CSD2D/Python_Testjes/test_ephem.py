@@ -31,8 +31,7 @@ for x in range(num_years):
     planet_distance = mars.earth_distance * ephem.meters_per_au / ephem.c
     print("%.2f sec" % (planet_distance))
 
-
-
+print(str(year_time))
 # neptune = ephem.Neptune(current_time)
 # print("%.2f sec" % (neptune.earth_distance * ephem.meters_per_au / ephem.c))
 
