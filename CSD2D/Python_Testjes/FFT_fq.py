@@ -36,16 +36,15 @@ def do_fft(infile,outfile):
     # roll the frequencys ahead or back in the spectrum (only with full list)
     yf = np.roll(yf, -20000)
 
-
     print("yf =", yf)
 
-    # #decompose spectrum
-    # YMag=abs(yf)
-    # YPhase=np.angle(yf)
-    # #set phase
-    # YPhase = 0
-    # # reconstruct spectrum
-    # yf = YMag*(np.cos(YPhase) + 1j*np.sin(YPhase))
+    #decompose spectrum
+    YMag=abs(yf)
+    YPhase=np.angle(yf)
+    #set phase
+    YPhase = 0
+    # reconstruct spectrum
+    yf = YMag*(np.cos(YPhase) + 1j*np.sin(YPhase))
 
     plt.plot(xf, np.abs(yf))
     plt.show()
@@ -56,15 +55,6 @@ def do_fft(infile,outfile):
     output_data = np.int16(output_data * (32767 / output_data.max()))
 
     write(outfile, samplerate, output_data)
-
-    # reconstruct spectrum
-    # Y = YMag*(np.cos(YPhase) + 1j*np.sin(YPhase))
-
-    # The maximum frequency is half the sample rate (nyquist)
-    # points_per_freq = len(xf) / (samplerate / 2)
-    #
-    # # write the result
-    # write(outfile,samplerate,np.real(y))
 
 if __name__ == '__main__':
   if len(sys.argv) < 2:
