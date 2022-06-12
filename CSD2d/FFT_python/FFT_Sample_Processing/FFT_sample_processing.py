@@ -13,7 +13,7 @@ SAMPLE_RATE = 44100 #hz
 
 def do_fft(infile,outfile):
 
-    #read input file
+    #read input file:
     (samplerate, input_data) = read(infile)
     print("samplerate =", samplerate)
     # #make mono

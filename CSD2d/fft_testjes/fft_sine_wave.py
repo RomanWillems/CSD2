@@ -14,36 +14,33 @@ from numpy import random
 import ephem
 import datetime
 
-#Planet information from:
+#Data retrieval part
 #https://rhodesmill.org/pyephem/index.html
+#------------------------------------------------------------------------------#
+# using now() to get current time
+current_time = datetime.datetime.now()
 
 #Audio FFT part
 #------------------------------------------------------------------------------#
 SAMPLE_RATE = 44100
 NIQUIST = SAMPLE_RATE / 2
-DURATION = 10
-PLANET = "planet"
-PLANET_NAME = "Neptune"
+DURATION = 1
 
-#number of samples.
 N = SAMPLE_RATE * DURATION
 
-#make empty array with all frequencies to 0, to fill later.
-yf = [0]
-for x in range(int(N)):
-    yf.append(0)
+#Make an empty array with the length of the NIQUIST * 2
+yf = [0]*int(NIQUIST + 1)
+#num = number of frequencies to draw
 
-#all distances from (2000,2022) on the first of january.
-#year_time = start year
-#num_years = number of frequencies to draw
+#alle afstanden van (2000tm2022/1/1) krijgen van gekozen planeet.
+
 year_time = 1999
-num_years = 100
+num_years = 23
 for x in range(num_years):
     year_time += 1
-    plant_result = eval('ephem.' + PLANET_NAME + '(str(year_time))')
-    PLANET = plant_result
+    neptune = ephem.Neptune(str(year_time))
     print(str(year_time))
-    planet_distance = PLANET.earth_distance * ephem.meters_per_au / ephem.c
+    planet_distance = neptune.earth_distance * ephem.meters_per_au / ephem.c
     print("%.2f sec" % (planet_distance))
     num = 22
     for x in range(num):
@@ -51,16 +48,19 @@ for x in range(num_years):
         #yf[frequency]
         yf[int(planet_distance)] = complex(1, random.uniform(8))
 
-#do the reverse fft of yf
-Y = ifft(yf)
+
+xf = rfftfreq(N, 1 / SAMPLE_RATE)
+plt.plot(xf, np.abs(yf))
+plt.show()
+
+x = ifft(yf)
 # print("x=", x)
 
 #normalize new signal
-norm_Y = np.int16(Y * (32767 / Y.max()))
+norm_x = np.int16(x * (32767 / x.max()))
 # print("normx", norm_x)
 
-write(PLANET_NAME + ".wav", SAMPLE_RATE, norm_Y)
+write("Neptune.wav", SAMPLE_RATE, norm_x)
 
-plt.title(PLANET_NAME)
-plt.plot(Y[:int(N)])
+plt.plot(x[:1000])
 plt.show()
