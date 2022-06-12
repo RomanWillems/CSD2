@@ -14,7 +14,7 @@ from numpy import random
 import ephem
 import datetime
 
-#Planet information from
+#Planet information from:
 #https://rhodesmill.org/pyephem/index.html
 
 #Audio FFT part
