@@ -19,22 +19,7 @@ import random
 #Testen.
 SAMPLE_RATE = 44100
 NIQUIST = SAMPLE_RATE / 2
-
-
-DURATION = 1
-# TODO:
-# FQ spectrum maken met 1 frequency en proberen de ifft daarvan te trekken door een sinus
-# te krijgen dan van een bepaald aantal hertz.
-# def gen_sine_wave(freq, sample_rate, duration):
-#     x = np.linspace(0, duration, sample_rate * duration, endpoint=False)
-#     frequencies = x * freq
-#     #2pi np.sin takes radians
-#     y = np.sin((2 * np.pi) * frequencies)
-#     return x, y
-#
-# #generate a 2 hz sine wave that lasts for 5 seconds
-# _, sin1 = gen_sine_wave(400, SAMPLE_RATE, DURATION)
-#
+DURATION = 10
 # Number of samples in normalized_tone
 N = SAMPLE_RATE * DURATION
 #
@@ -42,14 +27,13 @@ N = SAMPLE_RATE * DURATION
 # print("lengte lijst", len(yf))
 
 #Make an empty array with the length of the NIQUIST * 2
-yf = [0]*int(NIQUIST + 1)
+yf = [0]*int((N/2) + 1)
 #make an complex array with a real and imaginary part complex(1, amp)
 #yf[positie]
 yf[2000] = complex(1, 20000)
 
 
 xf = rfftfreq(N, 1 / SAMPLE_RATE)
-
 
 # print("yf =", yf)
 plt.plot(xf, np.abs(yf))
